@@ -11,6 +11,16 @@ export class InicioComponent implements OnInit {
   selectedSlot: { date: string; time: string } | null = null;
   display:boolean=false;
   fechaSeleccionada!: String;
+  espacioAcademicoSeleccionado!: any;
+  espaciosAcademicos = [
+    { id: 1, nombre: 'Aula Matemáticas' },
+    { id: 2, nombre: 'Aula Física' },
+    { id: 3, nombre: 'Aula Química' },
+    { id: 4, nombre: 'Aula Biología' },
+    { id: 5, nombre: 'Aula Historia' },
+    { id: 6, nombre: 'Aula Geografía' },
+    { id: 7, nombre: 'Aula Lengua Castellana' },
+  ];
 
 
   listaTiempos = [
@@ -77,5 +87,9 @@ export class InicioComponent implements OnInit {
 
   isSelected(date: Date, time: string) {
     return this.selectedSlot?.date === date.toISOString().split('T')[0] && this.selectedSlot?.time === time;
+  }
+
+  asignarEspacioAcademico(espacioAcademico: any) {
+    console.log(espacioAcademico);
   }
 }

@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormsModule } from '@angular/forms';
     DialogModule,
     ButtonModule,
     CalendarModule,
-    FormsModule
+    FormsModule,
+    DropdownModule
   ]
 })
 export class InicioModule { }

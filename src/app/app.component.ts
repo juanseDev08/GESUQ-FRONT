@@ -25,38 +25,39 @@ export class AppComponent implements OnInit {
   }
   setupMenuItems(): void {
 
-      this.items = [
-        {
-          label: 'Proyecto',
-          routerLink: 'administracion/proyecto',
-        },
-        {
-          label: 'Tipos de proyectos',
-          routerLink: 'administracion/tipo-proyecto',
-        },
-        {
-          label: 'Comunidad objetivo',
-          routerLink: 'administracion/comunidad-objetivo',
-        },
-        {
-          label: ' Áreas solicitantes',
-          routerLink: 'administracion/area-solicitante',
-        },
-        {
-          label: 'Costos',
-          routerLink: 'administracion/tipo-costo',
-        },
-        {
-          label: 'Acto administrativo',
-          routerLink: 'administracion/acto-administrativo',
-        },
-        {
-          label: 'Facultad programa',
-          routerLink: 'administracion/facultad-programa',
-        }];
-      };
+    this.items = [
+      {
+        label: 'Inicio',
+        routerLink: 'administracion/inicio',
+      },
+      {
+        label: 'Sede',
+        routerLink: 'administracion/sede',
+      },
+      {
+        label: 'Espacio academico',
+        routerLink: 'administracion/espacio-academico',
+      }, {
+        label: 'Convenios',
+        items: [
+          {
+            label: 'Facultad',
+            routerLink: 'administracion/facultad',
+          },
+          {
+            label: ' Programa',
+            routerLink: 'administracion/programa',
+          },
+          {
+            label: 'Facultad y programa',
+            routerLink: 'administracion/facultad-programa',
+          },
+        ],
+      },
+    ];
+  };
 
-      toggleItem(item: any): void {
-        item.expanded = !item.expanded;
-      }
+  toggleItem(item: any): void {
+    item.expanded = !item.expanded;
+  }
 }
