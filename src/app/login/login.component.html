@@ -1,0 +1,82 @@
+<br />
+<div class="h-full w-full align-items-center flex justify-content-center font">
+  <div class="surface-card p-4 shadow-2 border-round w-full md:w-5 xl:w-4">
+    <div [formGroup]="fg!">
+      <div class="grid">
+        <div class="col-12">
+          <label for="email1" class="block label-title font-medium mb-2"
+            >Usuario</label>
+          <input
+            formControlName="usuario"
+            id="usuario"
+            type="text"
+            placeholder="Usuario"
+            class="w-full mb-3"
+            pTooltip="Correo institucional"
+            pInputText            
+          />
+          <small
+            class="p-error"
+            *ngIf="fg && fg.get('usuario') && fg.get('usuario')?.errors?.['required'] && (fg.get('usuario')?.dirty || fg.get('usuario')?.touched)"
+            >
+            El usuario es obligatorio
+          </small>
+
+         <!-- <small
+              class="p-error"
+              *ngIf="validarCorreoElectronico()"
+              >
+                El campo no es un correo electrónico
+          </small>-->
+        </div>
+  
+        <div class="col-12">
+          <label for="password1" class="block label-title font-medium mb-2"
+            >Contraseña</label>
+          <p-password
+            formControlName="password"
+            id="password"
+            type="password"
+            placeholder="Contraseña"
+            inputStyleClass="flex w-full"
+            [feedback]="false"
+            [toggleMask]="true"
+            class=" flex mb-3"
+            [style]="{ width: '100%' }"
+            pTooltip="Contraseña establecida para el inicio de sesión"
+            (keydown.enter)="autenticar()"
+          />
+          <small
+            class="p-error"
+            *ngIf="fg && fg.get('password') && fg.get('password')?.errors?.['required'] && (fg.get('password')?.dirty || fg.get('password')?.touched)"
+            >
+            El password es obligatorio
+          </small>
+
+        </div>
+
+      </div>
+
+      <!--<div class="flex align-items-center justify-content-between mb-6">
+            <div class="flex align-items-center">
+                <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+                <label for="rememberme1" class="text-900">Remember me</label>
+            </div>
+            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
+        </div>-->
+
+      <button
+        pButton
+        pRipple
+        label="Ingresar"
+        class="w-full button-form"
+        [disabled]="fg!.invalid"
+        (click)="autenticar()"
+      >
+        <i class="fi fi-rs-user"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<br />
+<p-toast></p-toast>
