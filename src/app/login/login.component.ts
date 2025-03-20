@@ -40,10 +40,12 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(valorUsuario, valorPassword).subscribe({
       next: (respuesta) => {
+        console.log("entre",respuesta);
         this.storageService.guardar(respuesta);
         const userRoles = this.storageService.tipoUsuario();
         if (userRoles.length > 0) {
-          this.router.navigate(['/administracion/proyecto']).then(() => {
+          
+          this.router.navigate(['/administracion/inicio']).then(() => {
             history.pushState(null, '', location.href);
             window.location.reload();
           });
