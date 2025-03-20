@@ -1,6 +1,7 @@
 <div class="header">
   <div class="grid">
-    <div class="col-offset-1 col-1 pl-5 pt-6" pTooltip="Menú de parametrización">
+    <div *ngIf="!autenticado" class="col-offset-1"></div>
+    <div *ngIf="autenticado" class="col-offset-1 col-1 pl-5 pt-6" pTooltip="Menú de parametrización">
       <div class="card flex justify-content-center  mr-8">
         <p-sidebar [(visible)]="sidebarVisible" class="sidebar-container" [ngClass]="{'collapsed': !sidebarVisible}"
           modal="false">
@@ -53,22 +54,22 @@
 
 
     <div class="col-1 md:col-1 xl:col-1 mr-8">
-      <a class="w-full" href="administracion/proyecto"><img src="../assets/images/Logo_UQ_PNG.png" /></a>
+      <a class="w-full" href="administracion/inicio"><img src="../assets/images/Logo_UQ_PNG.png" /></a>
     </div>
-    <!--
+   
 
 <div *ngIf="!autenticado" class="col-1"></div>
--->
+
     <div class="col-6 md:col-7 xl:col-4 pl-6 mr-0 ml-1">
       <h1>
         <span style="color: black">GESTIÓN DE</span>
         <span style="color: #26670f"> AGENDAMIENTO SINCRONICO</span>
       </h1>
     </div>
-    <div class="col-8 md:col-6 xl:col-2 pl-6 pt-7 mr-2 md:mr-4 xl:mr-8">
+    <div *ngIf="autenticado" class="col-8 md:col-6 xl:col-2 pl-6 pt-7 mr-2 md:mr-4 xl:mr-8">
       <h3>{{nombreUsuario}}</h3>
     </div>
-    <div class="flex justify-content-end xl:col-offset-0 md:col-offset-4 xl:col-1 pt-8">
+    <div class="flex justify-content-end xl:col-offset-0 md:col-offset-4 xl:col-1 pt-8" *ngIf="autenticado">
       <p-button pRipple severity="success" icon="pi pi-sign-out" (click)="logout()" pTooltip="Cerrar sesión"></p-button>
     </div>
   </div>

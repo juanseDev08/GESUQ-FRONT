@@ -11,6 +11,7 @@ export class InicioComponent implements OnInit {
   selectedSlot: { date: string; time: string } | null = null;
   display:boolean=false;
   fechaSeleccionada!: String;
+  intervaloHorario!: string;
   espacioAcademicoSeleccionado!: any;
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
@@ -81,6 +82,7 @@ export class InicioComponent implements OnInit {
     if (this.obtenerDisponibilidad(fecha, time) === 'Ocupado') return;
     this.selectedSlot = { date: fecha.toISOString().split('T')[0], time };
     this.fechaSeleccionada=this.selectedSlot.date;
+    this.intervaloHorario=this.selectedSlot.time;
     console.log(`Seleccionaste: ${fecha.toISOString().split('T')[0]} a las ${time}`);
     this.display=true;
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from './services/storage.service';
 import { UsuarioService } from './services/usuario.service';
-import { IUsuario } from './model/usuario-model';
+
 import { Router } from '@angular/router';
 
 @Component({
