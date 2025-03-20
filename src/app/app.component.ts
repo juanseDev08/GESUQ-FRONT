@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'gasuq';
+  title = 'gesuq';
   sidebarVisible: boolean = false;
   items: any[] = [];
 
@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
         label: 'Espacio academico',
         routerLink: 'administracion/espacio-academico',
       }, {
-        label: 'Convenios',
+        label: 'Facultad',
         items: [
           {
             label: 'Facultad',
