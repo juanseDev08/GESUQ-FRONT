@@ -3,6 +3,7 @@ import { StorageService } from './services/storage.service';
 import { UsuarioService } from './services/usuario.service';
 
 import { Router } from '@angular/router';
+import { UtilConstants } from './util/util-constants';
 
 @Component({
   selector: 'app-root',
@@ -78,6 +79,7 @@ export class AppComponent implements OnInit {
   buscarUsuarioPorUsername(username : string){
     this.usuarioService.buscarUsuarioPorUserName(username).subscribe({
       next:(dataUsuario)=>{
+        window.sessionStorage.setItem(UtilConstants.NUM_IDENTIFICACION,dataUsuario.noDocumento!);
         this.nombreUsuario =dataUsuario.nombres + ' '+ dataUsuario.apellidos;
       }
     })
