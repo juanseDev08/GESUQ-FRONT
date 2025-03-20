@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { StorageService } from './services/storage.service';
+import { UsuarioService } from './services/usuario.service';
+import { IUsuario } from './model/usuario-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,19 +13,32 @@ export class AppComponent implements OnInit {
   title = 'gesuq';
   sidebarVisible: boolean = false;
   items: any[] = [];
+  autenticado = false;
+
+  nombreUsuario ?: string;
 
   toggleSidebar(): void {
     this.sidebarVisible = !this.sidebarVisible;
   }
+  constructor(
+    private usuarioService: UsuarioService,
+    private router: Router,
+    private storageService: StorageService
+  ){}
 
   ngOnInit(): void {
-    this.setupMenuItems();
+    this.autenticado = this.storageService.autenticado();
+    if(this.autenticado){
+      this.buscarUsuarioPorUsername(this.storageService.getUserName());
+      this.setupMenuItems();
+    }
+
+    
   }
-  logout(): void {
-    /*
+  logout(): void {    
     this.storageService.borrar();
     this.router.navigateByUrl('/login');
-    this.autenticado = false;*/
+    this.autenticado = false;
   }
   setupMenuItems(): void {
 
@@ -56,6 +73,15 @@ export class AppComponent implements OnInit {
       },
     ];
   };
+
+
+  buscarUsuarioPorUsername(username : string){
+    this.usuarioService.buscarUsuarioPorUserName(username).subscribe({
+      next:(dataUsuario)=>{
+        this.nombreUsuario =dataUsuario.nombres + ' '+ dataUsuario.apellidos;
+      }
+    })
+  }
 
   toggleItem(item: any): void {
     item.expanded = !item.expanded;
