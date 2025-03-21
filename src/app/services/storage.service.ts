@@ -33,6 +33,15 @@ export class StorageService {
     }
   }
 
+  public esAdmin(): boolean {
+    let valor = window.sessionStorage.getItem(llaveUsuario);
+    if (valor) {
+      return !!JSON.parse(valor).admin; // Devuelve true si el parámetro admin es true, de lo contrario false
+    } else {
+      return false; // Si no hay usuario almacenado, devuelve false
+    }
+  }
+
   public getToken(): string {
     let valor = window.sessionStorage.getItem(llaveUsuario);
     if (valor)

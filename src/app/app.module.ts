@@ -24,12 +24,14 @@ import { DropdownModule } from 'primeng/dropdown';
 
 import '@angular/common/locales/global/es-CO';
 import { LoginComponent } from './login/login.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,

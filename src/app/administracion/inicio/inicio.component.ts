@@ -9,7 +9,7 @@ export class InicioComponent implements OnInit {
   semanaActual!: Date;
   daysInWeek = 7;
   selectedSlot: { date: string; time: string } | null = null;
-  display:boolean=false;
+  display: boolean = false;
   fechaSeleccionada!: String;
   intervaloHorario!: string;
   espacioAcademicoSeleccionado!: any;
@@ -54,7 +54,7 @@ export class InicioComponent implements OnInit {
     return sunday;
   }
 
- 
+
   getCurrentWeek(): { date: Date; label: string }[] {
     return Array.from({ length: this.daysInWeek }, (_, i) => {
       let date = new Date(this.semanaActual);
@@ -73,7 +73,7 @@ export class InicioComponent implements OnInit {
 
 
   obtenerDisponibilidad(date: Date, time: string): string {
-    const dateKey = date.toISOString().split('T')[0]; 
+    const dateKey = date.toISOString().split('T')[0];
     return this.disponibilidad[dateKey]?.[time] || '';
   }
 
@@ -81,10 +81,10 @@ export class InicioComponent implements OnInit {
   onCellClick(fecha: Date, time: string) {
     if (this.obtenerDisponibilidad(fecha, time) === 'Ocupado') return;
     this.selectedSlot = { date: fecha.toISOString().split('T')[0], time };
-    this.fechaSeleccionada=this.selectedSlot.date;
-    this.intervaloHorario=this.selectedSlot.time;
+    this.fechaSeleccionada = this.selectedSlot.date;
+    this.intervaloHorario = this.selectedSlot.time;
     console.log(`Seleccionaste: ${fecha.toISOString().split('T')[0]} a las ${time}`);
-    this.display=true;
+    this.display = true;
   }
 
   isSelected(date: Date, time: string) {
