@@ -138,10 +138,4 @@ editarFacultad(): void{
     this.displayEditarFacultad = false;
   }
 
-  getActivoValue(): boolean {
-    return !!this.fg?.get('activo')?.value;
-  }
-  getSeverity(esActivo: boolean): 'success' | 'danger' {
-    return esActivo ? 'success' : 'danger';
-  }
 }

@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
             routerLink: 'administracion/facultad',
           },
           {
-            label: ' Programa',
+            label: 'Programa',
             routerLink: 'administracion/programa',
           },
           {

@@ -9,7 +9,7 @@
     <div class="grid">
       <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
         <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
-          pTooltip="Abrir modal para crear un espacio" />
+          pTooltip="Abrir modal para crear una facultad" />
       </div>
       <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
         <p-iconField iconPosition="right">
@@ -45,7 +45,7 @@
       </div>
     </div>
   </p-card>
-<!-- Crear Espacio-->
+<!-- Crear Facultad-->
 <p-dialog header="Agregar Facultad" [closable]="false" [modal]="true" [(visible)]="displayCrearFacultad"
   [style]="{ width: '100%', 'max-width': '25rem' }">
   <div [formGroup]="fg!">
