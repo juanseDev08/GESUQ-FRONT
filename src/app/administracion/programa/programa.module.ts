@@ -3,7 +3,18 @@ import { CommonModule } from '@angular/common';
 
 import { ProgramaRoutingModule } from './programa-routing.module';
 import { ProgramaComponent } from './programa.component';
-
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
+import { TagModule } from 'primeng/tag';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -11,7 +22,20 @@ import { ProgramaComponent } from './programa.component';
   ],
   imports: [
     CommonModule,
-    ProgramaRoutingModule
+    ProgramaRoutingModule,
+    TableModule,
+    ToolbarModule,
+    ToastModule,
+    ButtonModule,
+    DialogModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TooltipModule,
+    TagModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    CardModule
   ]
 })
 export class ProgramaModule { }

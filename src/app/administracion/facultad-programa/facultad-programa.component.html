@@ -1,1 +1,92 @@
-<p>facultad-programa works!</p>
+<p-toast />
+<div class="centered-title">
+    <h2>
+        <span style="color: rgb(50, 134, 57)">FACULTAD </span>
+        <span style="color: rgb(15, 15, 15)">PROGRAMA</span>
+    </h2>
+</div>
+<!--Tabla confiltro-->
+<p-card>
+    <div class="grid">
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
+                pTooltip="Abrir modal para crear un espacio" />
+        </div>
+        <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
+            <p-iconField iconPosition="right">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" (input)="
+            tablaEspacioLista.filterGlobal($any($event.target)!.value, 'contains')
+          " placeholder="Filtrar" [style]="{ width: '100%' }" />
+            </p-iconField>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-offset-1 col-10">
+            <p-table [value]="listaFacultadPrograma" #tablaEspacioLista [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true" [rows]="5" [globalFilterFields]="['nombreFacultad', 'nombrePrograma']"
+                [rowsPerPageOptions]="[5, 10]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="facultad">Facultad <p-sortIcon field="facultad"></p-sortIcon></th>
+                        <th pSortableColumn="facultad">Programa <p-sortIcon field="facultad"></p-sortIcon></th>
+                      
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-facultad>
+                    <tr>
+                        <td>{{ facultad.nombreFacultad }}</td>
+                        <td>{{ facultad.nombrePrograma }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+<!-- CREAR FACULTAD PROGRAMA-->
+<p-dialog header="Facultad Programa" [closable]="false" [modal]="true" [(visible)]="displayCrearFacultadPrograma"
+    [style]="{ width: '90%', 'max-width': '70rem' }">
+    <div [formGroup]="fg!">
+        <div class="grid pb-3">
+            <div class="col-12 md:col-10 xl:col-12 flex justify-content-between">
+                <label for="facultad" class="font-semibold  flex align-items-center col-2">Facultad:<span
+                        class="text-danger ">*</span></label>
+                <p-dropdown id="facultad" name="facultad" optionLabel="nombreFacultad" [options]="listFacultades"  (onClear)="limpiarListaTabla()"
+                    (onChange)="facultSeleccionada($event.value)" formControlName="facultad" optionValue="idFacultad" appendTo="body" placeholder="Seleccione" class="flex-grow-1 truncate-text col-6"
+                    (onClear)="limpiarListaTabla()" pTooltip="Seleccione la facultad que desea asociar los programas." [showClear]="true"
+                    [style]="{ width: '100%' }"></p-dropdown>
+            </div>
+            <div  *ngIf="facultadSeleccionada"  class="col-12 md:col-10 xl:col-12 flex justify-content-end gap-2">
+                <p-iconField iconPosition="right">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search" (input)=" tablaProgramas.filterGlobal($any($event.target)!.value, 'contains')
+              " placeholder="Filtrar" [style]="{ width: '98%' }" />
+                </p-iconField>
+            </div>
+            <div  class="col-12 md:col-10 xl:col-12 flex justify-content-between"  >
+                <p-table  [value]="listProgramas" #tablaProgramas class="md:col-12 xl:col-12"  *ngIf="facultadSeleccionada"
+                    [(selection)]="programaSeleccionados" dataKey="codPrograma" [tableStyle]="{'min-width': '35rem'}"
+                    [paginator]="true" [rows]="5" [globalFilterFields]="['nombre']">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 4rem" pTooltip="Seleccionar todos los programas."><p-tableHeaderCheckbox /></th>
+                            <th>Nombre programa</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-programa>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="programa" />
+                            </td>
+                            <td>{{programa.nombre}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()"  />
+        <p-button label="Crear" (click)="crearFacultadSolicitante()"  *ngIf="facultadSeleccionada" />
+    </div>
+</p-dialog>
