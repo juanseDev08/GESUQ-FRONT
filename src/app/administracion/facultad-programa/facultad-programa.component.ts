@@ -10,6 +10,7 @@ import { FacultadService } from '../../services/facultad.service';
 import { ProgramaService } from '../../services/programa.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Table } from 'primeng/table';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-facultad-programa',
@@ -68,9 +69,9 @@ export class FacultadProgramaComponent implements OnInit {
   listarProgramas() {
     this.programaService.listarProgramas().subscribe({
       next: (dataprograma) => {
-        this.listProgramas = dataprograma.filter(
+        this.listProgramas =  dataprograma.filter(
           (programa) => !this.listaFacultadPrograma.some(
-            (facultadPrograma) => facultadPrograma.codPrograma === programa.codPrograma
+            (facultadPrograma) => facultadPrograma.programa?.codPrograma === programa.codPrograma
           )
         );
         this.marcarProgramasSeleccionados();
@@ -82,15 +83,18 @@ export class FacultadProgramaComponent implements OnInit {
   listarFacultadPrograma(){
     this.facultadProgramaService.listarFacultadPrograma().subscribe({
       next:(datafacultadprograma)=>{
-        this.listaFacultadPrograma=datafacultadprograma;
+          this.listaFacultadPrograma=datafacultadprograma;
       },
-      error: (dataerror) => console.log(dataerror),
+      error: (dataerror) => { console.error(dataerror);
+        this.listaFacultadPrograma =[]},
     });
   }
 
   facultSeleccionada(event:any){
+
     if(event){
       this.facultadSeleccionada = this.listFacultades.find((facul) => facul.idFacultad === event)!;
+    
       this.listarProgramas();
     }else{
       this.facultadSeleccionada = undefined;
@@ -100,7 +104,7 @@ export class FacultadProgramaComponent implements OnInit {
   marcarProgramasSeleccionados() {
     this.programaSeleccionados = this.listProgramas.filter((programa) =>
       this.listaFacultadPrograma.some(facultadPrograma =>
-        facultadPrograma.codPrograma === programa.codPrograma));
+        facultadPrograma.programa!.codPrograma === programa.codPrograma));
   }
 
 
@@ -112,16 +116,15 @@ export class FacultadProgramaComponent implements OnInit {
         this.newFacultadSolicitantes = [];
       }
 
-      const nuevosRegistros = this.programaSeleccionados.map(i => ({
-        codPrograma: i.codPrograma,
-        nombrePrograma: i.nombre,
-        idFacultad: this.facultadSeleccionada?.idFacultad,
-        nombreFacultad: this.facultadSeleccionada?.nombreFacultad,
+      let nuevosRegistros: IFacultadPrograma[] = this.programaSeleccionados.map(i => ({
+        programa: {idPrograma: i.idPrograma, codPrograma: i.codPrograma ,nombre: i.nombre  }, // Se debe enviar el código del programa
+        facultad: { idFacultad: this.facultadSeleccionada!.idFacultad, nombreFacultad: this.facultadSeleccionada?.nombreFacultad  }, // Se debe enviar el código de la facultad
         idUsuarioCreacion: this.noDocumento
       }));     
 
-      this.newFacultadSolicitantes.push(...nuevosRegistros);
-      this.facultadProgramaService.crearFacultadPrograma(this.newFacultadSolicitantes).subscribe({
+      let newLista = [...this.listaFacultadPrograma,...nuevosRegistros];
+      
+      this.facultadProgramaService.crearFacultadPrograma(newLista).subscribe({
         next: (datalistarequipo) => {
           this.messageService.add({
             severity: 'success',
@@ -143,12 +146,13 @@ export class FacultadProgramaComponent implements OnInit {
     }
 
   }
+
   eliminarFacultadPrograma(seleccionados: Programa[], facultSelect: Facultad) {
     this.listaFacultadPrograma.forEach((i) => {
-      if (!seleccionados?.some(select => select.codPrograma === i.codPrograma
-      ) && i.idFacultad == facultSelect.idFacultad) {
+      if (!seleccionados?.some(select => select.codPrograma === i.programa?.codPrograma
+      ) && i.facultad?.idFacultad == facultSelect.idFacultad) {
 
-        this.facultadProgramaService.eliminarFacultadPrograma(i.codPrograma!).subscribe({
+        this.facultadProgramaService.eliminarFacultadPrograma(i.programa!.codPrograma!).subscribe({
           next: (datalistarequipo) => {
             this.listarFacultadPrograma();
             this.cerrarCrearModal();
@@ -164,6 +168,31 @@ export class FacultadProgramaComponent implements OnInit {
 
   }
 
+  eliminar(event:any){
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará permanentemente esta relación. ¿Deseas continuar?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#26670f",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar"
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.facultadProgramaService.eliminarFacultadProgramaporid(event.idFacultadPrograma).subscribe({
+          next:()=>{
+            Swal.fire({
+              title: "¡Eliminación exitosa!",
+              text: "El dato seleccionado ha sido eliminado correctamente.",
+              icon: "success"
+            });
+            this.listarFacultadPrograma();
+          }
+        });
+      }
+    });
+    
+  }
 
   //---- Abrir modales ----//
   abrirCrearModal(): void {

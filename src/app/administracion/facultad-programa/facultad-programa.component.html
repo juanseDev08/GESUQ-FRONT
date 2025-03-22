@@ -30,13 +30,19 @@
                     <tr>
                         <th pSortableColumn="facultad">Facultad <p-sortIcon field="facultad"></p-sortIcon></th>
                         <th pSortableColumn="facultad">Programa <p-sortIcon field="facultad"></p-sortIcon></th>
+                        <th>Acciones</th>
                       
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-facultad>
                     <tr>
-                        <td>{{ facultad.nombreFacultad }}</td>
-                        <td>{{ facultad.nombrePrograma }}</td>
+                        <td>{{ facultad.facultad.nombreFacultad }}</td>
+                        <td>{{ facultad.programa.nombre }}</td>
+                        <td>
+                            &nbsp;
+                            <p-button (onClick)="eliminar(facultad)" icon="pi pi-trash" styleClass="button-form"
+                              pTooltip="Abrir modal para editar la facultad seleccionado"></p-button>
+                          </td>
                     </tr>
                 </ng-template>
             </p-table>
