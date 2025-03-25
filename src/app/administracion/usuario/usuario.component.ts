@@ -42,6 +42,7 @@ export class UsuarioComponent implements OnInit {
     clave: new FormControl('', [
       Validators.required
     ]),
+    activo: new FormControl(false),
   });
 
   constructor(
@@ -59,11 +60,15 @@ export class UsuarioComponent implements OnInit {
   listarUsuarios(): void {
     this.usuarioService.listarUsuarios().subscribe({
       next: (datausuario) => {
-        this.listUsuarios = datausuario;
+        this.listUsuarios = datausuario;  
+        console.log("dasdasdasd",datausuario);
+            
       },
       error: (dataerror) => console.log(dataerror),
     });
   }
+
+
 
   abrirCrearModal() {
     this.fg.reset();
@@ -77,32 +82,25 @@ export class UsuarioComponent implements OnInit {
     this.fg?.get('noDocumento')?.setValue(usuario.noDocumento!);
     this.fg?.get('nombres')?.setValue(usuario.nombres!);
     this.fg?.get('apellidos')?.setValue(usuario.apellidos!);
+    this.fg.get('clave')?.setValue(usuario.clave!);
     this.fg?.get('usuario')?.setValue(usuario.usuario!);    
     this.fg?.get('admin')?.setValue(usuario.admin!);
-    
+    this.fg?.get('activo')?.setValue(usuario.activo!);
 
+    this.displayEditarUsuario=true;
+    
   }
 
   crearUsuario(){
-
     this.newUsuario.idUsuarioCreacion = this.noDocumento;
-    console.log('Formulario antes de validar:', this.fg.value);
-    console.log('Errores del formulario:', this.fg.errors);
-    console.log('Estado del formulario:', this.fg.valid);
-
     this.newUsuario.noDocumento=this.fg?.get('noDocumento')?.value!;
     this.newUsuario.nombres=this.fg?.get('nombres')?.value!;
     this.newUsuario.apellidos=this.fg?.get('apellidos')?.value!;
     this.newUsuario.usuario=this.fg?.get('usuario')?.value!;
     this.newUsuario.clave=this.fg?.get('clave')?.value!;
     this.newUsuario.admin = this.fg?.get('admin')?.value!;
-   
-
-    
+  
     if (this.fg.valid) {
-
-     
-      
       this.usuarioService.crearUsuario(this.newUsuario).subscribe({
         next:(datausuario)=>{
           this.messageService.add({
@@ -130,6 +128,43 @@ export class UsuarioComponent implements OnInit {
     
   }
 
+  editarUsuario() {
+    this.newUsuario.idUsuarioModificacion = this.noDocumento;
+    this.newUsuario.noDocumento=this.fg?.get('noDocumento')?.value!;
+    this.newUsuario.nombres=this.fg?.get('nombres')?.value!;
+    this.newUsuario.apellidos=this.fg?.get('apellidos')?.value!;
+    this.newUsuario.usuario=this.fg?.get('usuario')?.value!;
+    console.log("asdasd ", this.getAdminValue()!);
+    
+    this.newUsuario.admin = this.getAdminValue()!;
+    this.newUsuario.activo = this.getActivoValue()!;
+
+    if (this.fg.valid) {
+      this.usuarioService.actualizarUsuario(this.newUsuario).subscribe({
+        next: datalistausuario => {
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Registro actualizado con éxito',
+          });
+          this.usuario = datalistausuario;
+          this.listarUsuarios();
+          this.cerrarEditarModal();
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'ERROR',
+            detail: 'El registro ingresado ya existe',
+          });
+        },
+      });
+    } else {
+      this.mensaje.mensajeError("Error al editar","Es necesario completar todos los campos del formulario para editar.");
+    }
+
+
+  }
+
     //----cerrar modales--//
     cerrarCrearModal(): void {
       this.displayCrearUsuario = false;
@@ -138,6 +173,16 @@ export class UsuarioComponent implements OnInit {
     cerrarEditarModal(): void {
       this.displayEditarUsuario = false;
   
+    }
+
+    getActivoValue(): boolean {
+      return !!this.fg?.get('activo')?.value;
+    }
+    getAdminValue(): boolean {
+      return !!this.fg?.get('admin')?.value;
+    }
+    getSeverity(esActivo: boolean): 'success' | 'danger' {
+      return esActivo ? 'success' : 'danger';
     }
 
 }

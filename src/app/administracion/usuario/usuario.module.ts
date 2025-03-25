@@ -16,6 +16,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
+import { PasswordModule } from 'primeng/password';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { CardModule } from 'primeng/card';
     InputIconModule,
     InputTextModule,
     CardModule,
-    CheckboxModule
+    CheckboxModule,
+    PasswordModule
   ]
 
 })
