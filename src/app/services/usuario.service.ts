@@ -13,7 +13,7 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   public listarUsuarios() :Observable<IUsuario[]>{
-    return this.http.get<IUsuario[]>(this.urlServicio+'listarUsuarios');
+    return this.http.get<IUsuario[]>(this.urlServicio+'/listarUsuarios');
   }
 
   public crearUsuario(Iusuario :IUsuario): Observable<IUsuario>{

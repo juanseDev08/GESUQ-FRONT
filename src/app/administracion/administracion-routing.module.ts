@@ -7,7 +7,8 @@ const routes: Routes = [{ path: 'inicio', loadChildren: () =>
   { path: 'facultad', loadChildren: () => import('./facultad/facultad.module').then(m => m.FacultadModule) }, 
   { path: 'espacio-academico', loadChildren: () => import('./espacio-academico/espacio-academico.module').then(m => m.EspacioAcademicoModule) }, 
   { path: 'sede', loadChildren: () => import('./sede/sede.module').then(m => m.SedeModule) }, 
-  { path: 'facultad-programa', loadChildren: () => import('./facultad-programa/facultad-programa.module').then(m => m.FacultadProgramaModule) }];
+  { path: 'facultad-programa', loadChildren: () => import('./facultad-programa/facultad-programa.module').then(m => m.FacultadProgramaModule) },
+  { path: 'usuario', loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule) }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

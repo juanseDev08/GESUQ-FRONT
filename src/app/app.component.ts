@@ -55,7 +55,13 @@ export class AppComponent implements OnInit {
       {
         label: 'Espacio academico',
         routerLink: 'administracion/espacio-academico',
-      }, {
+      },
+      {
+        label: 'Usuario',
+        routerLink: 'administracion/usuario',
+      }    
+      
+      , {
         label: 'Facultad',
         items: [
           {
