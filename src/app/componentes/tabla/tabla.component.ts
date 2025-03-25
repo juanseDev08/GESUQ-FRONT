@@ -25,6 +25,7 @@ export class TablaComponent implements OnInit {
   listEspacioAcademico!: any;
   newReservaEspacio!: ReservaEspacio;
   usuario ?: Usuario;
+  listaReservas!: ReservaEspacio[];
 
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
@@ -46,18 +47,20 @@ export class TablaComponent implements OnInit {
     '7:00 PM - 9:00 PM'
   ];
 
-  disponibilidad: { [key: string]: { [key: string]: string } } = {
+ /* disponibilidad: { [key: string]: { [key: string]: string } } = {
     '2025-03-18': { '12:00 PM - 2:00 PM': 'Ocupado', '2:00 PM - 4:00 PM': 'Ocupado' },
     '2025-03-19': { '10:00 AM - 12:00 PM': 'Ocupado', '12:00 PM - 2:00 PM': 'Ocupado' },
     '2025-03-20': { '2:00 PM - 4:00 PM': 'Ocupado' },
     '2025-03-22': { '7:00 PM - 9:00 PM': 'Disponible' },
     '2025-03-28': { '7:00 PM - 9:00 PM': 'Disponible' }
-  };
-
+  };*/
+  disponibilidad: { [key: string]: { [key: string]: string } } = {};
   ngOnInit() {
     this.semanaActual = this.obtenerDomingoActual();
     this.listarEspacioAcademico();
     this.buscarUsuarioPorUsername(this.storageService.getUserName());
+    this.listarReservas();
+    
   }
 
 
@@ -138,21 +141,39 @@ export class TablaComponent implements OnInit {
     });
   }
 
+  listarReservas(): void {
+    this.reservaEspacioService.listarReservas().subscribe({
+      next: (datareserva) => {
+        this.listaReservas = datareserva;
+        this.listaReservas.map((reserva) => {
+          this.disponibilidad[new Date(reserva.fechaReservaEspacio!).toISOString().split('T')[0]] = {
+            [reserva.horario!]: reserva.ocupado? 'Ocupado': 'disponible'
+          };
+        });
+        console.log('Reservas', this.listaReservas);
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
+  }
+
   agendar() {
     const newEspacio = new ReservaEspacio();
     newEspacio.espacioAcademico = this.espacioAcademicoSeleccionado;
     newEspacio.fechaReservaEspacio = new Date(this.fechaSeleccionada);
     newEspacio.horario = this.intervaloHorario;
-    newEspacio.isOcupado = true;
+    newEspacio.ocupado = true;
     newEspacio.usuario = this.usuario;
     newEspacio.idUsuarioCreacion =this.usuario?.noDocumento!;
+    
 
     this.reservaEspacioService.crearReserva(newEspacio).subscribe({
       next: (data) => {
-        console.log(data);
         this.display = false;
+        this.listarReservas();
       },
       error: (dataerror) => console.log(dataerror),
     });
+
+
   }
 }

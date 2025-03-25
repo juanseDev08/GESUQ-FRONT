@@ -3,7 +3,7 @@ import { Usuario } from "./usuario-model";
 
 export interface IReservaEspacio{
     idReservaEspacio ?: number;
-    isOcupado ?: boolean;
+    ocupado ?: boolean;
     fechaReservaEspacio ?: Date;
     horario ?: string;
     espacioAcademico ?: EspacioAcademico;
@@ -15,7 +15,7 @@ export interface IReservaEspacio{
 
 export class ReservaEspacio implements IReservaEspacio{
     idReservaEspacio ?: number;
-    isOcupado ?: boolean;
+    ocupado ?: boolean;
     fechaReservaEspacio ?: Date;
     horario ?: string;
     espacioAcademico ?: EspacioAcademico;

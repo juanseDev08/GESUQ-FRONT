@@ -100,7 +100,6 @@ export class InicioComponent implements OnInit {
 
   asignarEspacioAcademico(espacioAcademico: any) {
     this.espacioAcademicoSeleccionado = espacioAcademico;
-    console.log(espacioAcademico);
   }
 
   listarEspacioAcademico(): void {
