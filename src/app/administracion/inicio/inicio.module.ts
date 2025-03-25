@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { ComponentesModule } from "../../componentes/componentes.module";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DropdownModule } from 'primeng/dropdown';
     ButtonModule,
     CalendarModule,
     FormsModule,
-    DropdownModule
-  ]
+    DropdownModule,
+    ComponentesModule
+]
 })
 export class InicioModule { }

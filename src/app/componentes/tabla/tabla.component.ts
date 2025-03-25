@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 import { EspacioAcademicoService } from '../../services/espacio-academico.service';
 
 @Component({
-  selector: 'app-inicio',
-  templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.scss'
+  selector: 'app-tabla',
+  templateUrl: './tabla.component.html',
+  styleUrl: './tabla.component.scss'
 })
-export class InicioComponent implements OnInit {
-  semanaActual!: Date;
+export class TablaComponent {
+
+@Input() espacioAcademicoSeleccionado!: any;
+
+ semanaActual!: Date;
   daysInWeek = 7;
   selectedSlot: { date: string; time: string } | null = null;
   display: boolean = false;
   fechaSeleccionada!: String;
   intervaloHorario!: string;
   listEspacioAcademico!: any;
-  espacioAcademicoSeleccionado!: any;
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
     { id: 2, nombre: 'Aula Física' },
