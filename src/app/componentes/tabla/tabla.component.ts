@@ -1,22 +1,31 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, input, OnInit } from '@angular/core';
 import { EspacioAcademicoService } from '../../services/espacio-academico.service';
+import { ReservaEspacio } from '../../model/reserva-espacio';
+import { UsuarioService } from '../../services/usuario.service';
+import { ReservaEspacioService } from '../../services/reserva-espacio.service';
+import { UtilConstants } from '../../util/util-constants';
+import { StorageService } from '../../services/storage.service';
+import { Usuario } from '../../model/usuario-model';
 
 @Component({
   selector: 'app-tabla',
   templateUrl: './tabla.component.html',
   styleUrl: './tabla.component.scss'
 })
-export class TablaComponent {
+export class TablaComponent implements OnInit {
 
-@Input() espacioAcademicoSeleccionado!: any;
+  @Input() espacioAcademicoSeleccionado!: any;
 
- semanaActual!: Date;
+  semanaActual!: Date;
   daysInWeek = 7;
   selectedSlot: { date: string; time: string } | null = null;
   display: boolean = false;
-  fechaSeleccionada!: String;
+  fechaSeleccionada!: string;
   intervaloHorario!: string;
   listEspacioAcademico!: any;
+  newReservaEspacio!: ReservaEspacio;
+  usuario ?: Usuario;
+
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
     { id: 2, nombre: 'Aula Física' },
@@ -48,10 +57,17 @@ export class TablaComponent {
   ngOnInit() {
     this.semanaActual = this.obtenerDomingoActual();
     this.listarEspacioAcademico();
+    this.buscarUsuarioPorUsername(this.storageService.getUserName());
   }
 
 
-  constructor(private espacioAcademicoService: EspacioAcademicoService) {
+  constructor
+  (
+    private espacioAcademicoService: EspacioAcademicoService,
+    private usuarioService: UsuarioService,
+    private reservaEspacioService: ReservaEspacioService,
+    private storageService: StorageService
+  ) {
 
   }
 
@@ -63,7 +79,14 @@ export class TablaComponent {
     return sunday;
   }
 
-
+  buscarUsuarioPorUsername(username: string) {
+    this.usuarioService.buscarUsuarioPorUserName(username).subscribe({
+      next: (dataUsuario) => {
+       
+        this.usuario = dataUsuario;
+      }
+    })
+  }
   getCurrentWeek(): { date: Date; label: string }[] {
     return Array.from({ length: this.daysInWeek }, (_, i) => {
       let date = new Date(this.semanaActual);
@@ -109,7 +132,25 @@ export class TablaComponent {
     this.espacioAcademicoService.listarEspaciosAcademicos().subscribe({
       next: (dataespacioacademico) => {
         this.listEspacioAcademico = dataespacioacademico;
-        
+
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
+  }
+
+  agendar() {
+    const newEspacio = new ReservaEspacio();
+    newEspacio.espacioAcademico = this.espacioAcademicoSeleccionado;
+    newEspacio.fechaReservaEspacio = new Date(this.fechaSeleccionada);
+    newEspacio.horario = this.intervaloHorario;
+    newEspacio.isOcupado = true;
+    newEspacio.usuario = this.usuario;
+    newEspacio.idUsuarioCreacion =this.usuario?.noDocumento!;
+
+    this.reservaEspacioService.crearReserva(newEspacio).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.display = false;
       },
       error: (dataerror) => console.log(dataerror),
     });
