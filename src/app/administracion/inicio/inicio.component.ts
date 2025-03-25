@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { EspacioAcademicoService } from '../../services/espacio-academico.service';
 
 @Component({
   selector: 'app-inicio',
@@ -12,6 +13,7 @@ export class InicioComponent implements OnInit {
   display: boolean = false;
   fechaSeleccionada!: String;
   intervaloHorario!: string;
+  listEspacioAcademico!: any;
   espacioAcademicoSeleccionado!: any;
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
@@ -43,8 +45,13 @@ export class InicioComponent implements OnInit {
 
   ngOnInit() {
     this.semanaActual = this.obtenerDomingoActual();
+    this.listarEspacioAcademico();
   }
 
+
+  constructor(private espacioAcademicoService: EspacioAcademicoService) {
+
+  }
 
   obtenerDomingoActual(): Date {
     const today = new Date();
@@ -94,5 +101,16 @@ export class InicioComponent implements OnInit {
   asignarEspacioAcademico(espacioAcademico: any) {
     this.espacioAcademicoSeleccionado = espacioAcademico;
     console.log(espacioAcademico);
+  }
+
+  listarEspacioAcademico(): void {
+    this.espacioAcademicoService.listarEspaciosAcademicos().subscribe({
+      next: (dataespacioacademico) => {
+        this.listEspacioAcademico = dataespacioacademico;
+        console.log('Espacios academicos', this.listEspacioAcademico);
+        
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
   }
 }

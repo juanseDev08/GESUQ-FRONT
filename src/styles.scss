@@ -1887,3 +1887,8 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
   .clickable:hover {
     background-color: gray;
   }
+
+  .no-hover {
+    pointer-events: none; 
+    cursor: not-allowed; 
+  }

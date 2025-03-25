@@ -1,6 +1,6 @@
 <div class="grid">
   <div class="col-offset-2 col-8">
-    <p-dropdown [options]="espaciosAcademicos" [(ngModel)]="espacioAcademicoSeleccionado" optionLabel="nombre"
+    <p-dropdown [options]="listEspacioAcademico" [(ngModel)]="espacioAcademicoSeleccionado" optionLabel="nombre"
       placeholder="Selecciona el aula" class=" flex-grow-1" [style]="{ width: '100%' }"
       (onChange)="asignarEspacioAcademico($event.value)" showClear="true">
     </p-dropdown>
@@ -23,7 +23,10 @@
       <ng-template pTemplate="body" let-time>
         <tr>
           <td>{{ time }}</td>
-          <td *ngFor="let day of getCurrentWeek()" (click)="onCellClick(day.date, time)" class="clickable ">
+          <td *ngFor="let day of getCurrentWeek()" (click)="onCellClick(day.date, time)" [ngClass]="{
+            'clickable': obtenerDisponibilidad(day.date, time) !== 'Ocupado',
+            'no-hover': obtenerDisponibilidad(day.date, time) === 'Ocupado'
+          }" class="clickable ">
             <span [ngClass]="{
                 'occupied': obtenerDisponibilidad(day.date, time) === 'Ocupado',
                 'available': obtenerDisponibilidad(day.date, time) === 'Disponible'
