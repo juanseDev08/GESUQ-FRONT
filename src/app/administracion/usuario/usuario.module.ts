@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SedeRoutingModule } from './sede-routing.module';
-import { SedeComponent } from './sede.component';
+import { UsuarioRoutingModule } from './usuario-routing.module';
+import { UsuarioComponent } from './usuario.component';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
@@ -14,16 +14,17 @@ import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
 
 
 @NgModule({
   declarations: [
-    SedeComponent
+    UsuarioComponent
   ],
   imports: [
     CommonModule,
-    SedeRoutingModule,
+    UsuarioRoutingModule,
     TableModule,
     ToastModule,
     ToolbarModule,
@@ -36,7 +37,9 @@ import { CardModule } from 'primeng/card';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    CheckboxModule
   ]
+
 })
-export class SedeModule { }
+export class UsuarioModule { }

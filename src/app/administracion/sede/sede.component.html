@@ -1,1 +1,136 @@
-<p>sede works!</p>
+<p-toast />
+<div class="centered-title">
+    <h2>
+        <span style="color: rgb(50, 134, 57)">SEDES</span>
+    </h2>
+</div>
+<!--Tabla confiltro-->
+<p-card>
+    <div class="grid">
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
+                pTooltip="Abrir modal para crear una sede" />
+        </div>
+        <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
+            <p-iconField iconPosition="right">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" (input)="
+            tablaSedeLista.filterGlobal($any($event.target)!.value, 'contains')
+          " placeholder="Filtrar" [style]="{ width: '100%' }" />
+            </p-iconField>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-offset-1 col-10">
+            <p-table [value]="listSedes" #tablaSedeLista [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true"
+                [rows]="5" [globalFilterFields]="['nombreSede']" [rowsPerPageOptions]="[5, 10]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>                        
+                        <th pSortableColumn="ubicacion">Ubicacion <p-sortIcon field="ubicacion"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </ng-template>
+                <ng-template pTemplate="body" let-sede>
+                    <tr>
+                        <td>{{ sede.nombreSede }}</td>
+                        <td>{{ sede.ubicacion }}</td>
+                        <td>
+                            &nbsp;
+                            <p-button (onClick)="abrirEditarModal(sede)" icon="pi pi-pencil"
+                                styleClass="button-form"
+                                pTooltip="Abrir modal para editar la sede seleccionada"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+<!-- Crear sede-->
+<p-dialog header="Agregar Sede" [closable]="false" [modal]="true" [(visible)]="displayCrearSede"
+    [style]="{ width: '100%', 'max-width': '25rem' }">
+    <div [formGroup]="fg!">
+        <div class="grid pb-3">
+            <div class="col-4 flex align-items-center">
+                <label for="nombre" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span></label>                
+            </div >
+
+          
+           
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="nombre" autocomplete="off" formControlName="nombre"
+                    pTooltip="Ingrese el nombre del espacio" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('nombre')?.errors?.['required'] && (fg.get('nombre')?.dirty || fg.get('nombre')?.touched)">El
+                    nombre es obligatorio</small>
+            </div>
+        </div>
+
+        <div class="grid pb-3">
+            <div class="col-4 flex align-items-center">
+                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span></label>                
+            </div >
+
+          
+           
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off" formControlName="ubicacion"
+                    pTooltip="Ingrese la ubicacion de la sede" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('ubicacion')?.errors?.['required'] && (fg.get('ubicacion')?.dirty || fg.get('ubicacion')?.touched)">La Ubicación es obligatorio</small>
+            </div>
+        </div>
+
+        
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()" />
+            <p-button label="Crear" (click)="crearSede()" />
+        </div>
+    </div>
+</p-dialog>
+
+
+<!-- Editar Sede-->
+<p-dialog header="Editar Sede" [closable]="false" [modal]="true" [(visible)]="displayEditarSede"
+    [style]="{width: '100%', 'max-width': '25rem'  }">
+    <div [formGroup]="fg!">
+        <div class="grid">
+            <div class="col-4 flex align-items-center">
+                <label for="nombre" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span> </label>
+            </div>
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="nombre" autocomplete="off" formControlName="nombre"
+                    pTooltip="Ingrese el nombre del espacio" maxlength="51" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('nombre')?.errors?.['required'] && (fg.get('nombre')?.dirty || fg.get('nombre')?.touched)">El
+                    nombre es obligatorio</small>
+            </div>
+
+            <div class="col-4 flex align-items-center">
+                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span> </label>
+            </div>
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off" formControlName="ubicacion"
+                    pTooltip="Ingrese la ubicación de la sede" maxlength="51" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('nombre')?.errors?.['required'] && (fg.get('nombre')?.dirty || fg.get('nombre')?.touched)">La
+                    ubicación es obligatoria</small>                    
+            </div>
+
+            
+        </div>
+
+      
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (click)="cerrarEditarModal()" />
+            <p-button label="Editar" (click)="editarSede()" />
+        </div>
+    </div>
+</p-dialog>
