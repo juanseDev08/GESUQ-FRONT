@@ -27,7 +27,7 @@
                 [rows]="5" [globalFilterFields]="['nombreSede']" [rowsPerPageOptions]="[5, 10]">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>                        
+                        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
                         <th pSortableColumn="ubicacion">Ubicacion <p-sortIcon field="ubicacion"></p-sortIcon></th>
                         <th>Acciones</th>
                     </tr>
@@ -37,11 +37,20 @@
                     <tr>
                         <td>{{ sede.nombreSede }}</td>
                         <td>{{ sede.ubicacion }}</td>
-                        <td>
-                            &nbsp;
-                            <p-button (onClick)="abrirEditarModal(sede)" icon="pi pi-pencil"
-                                styleClass="button-form"
-                                pTooltip="Abrir modal para editar la sede seleccionada"></p-button>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
+                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
+                                (onChange)="abrirModal($event.value, sede)">
+                                <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                        [ngClass]="{'no-pointer': opcion.disable}">
+                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
+                                            [disabled]="opcion.disable"
+                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </td>
                     </tr>
                 </ng-template>
@@ -55,11 +64,11 @@
     <div [formGroup]="fg!">
         <div class="grid pb-3">
             <div class="col-4 flex align-items-center">
-                <label for="nombre" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span></label>                
-            </div >
+                <label for="nombre" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span></label>
+            </div>
 
-          
-           
+
+
             <div class="col-8">
                 <input pInputText class="flex-grow-1 w-full" id="nombre" autocomplete="off" formControlName="nombre"
                     pTooltip="Ingrese el nombre del espacio" />
@@ -72,21 +81,22 @@
 
         <div class="grid pb-3">
             <div class="col-4 flex align-items-center">
-                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span></label>                
-            </div >
+                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span></label>
+            </div>
 
-          
-           
+
+
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off" formControlName="ubicacion"
-                    pTooltip="Ingrese la ubicacion de la sede" />
+                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off"
+                    formControlName="ubicacion" pTooltip="Ingrese la ubicacion de la sede" />
                 <br />
                 <small class="p-error"
-                    *ngIf="fg.get('ubicacion')?.errors?.['required'] && (fg.get('ubicacion')?.dirty || fg.get('ubicacion')?.touched)">La Ubicación es obligatorio</small>
+                    *ngIf="fg.get('ubicacion')?.errors?.['required'] && (fg.get('ubicacion')?.dirty || fg.get('ubicacion')?.touched)">La
+                    Ubicación es obligatorio</small>
             </div>
         </div>
 
-        
+
         <div class="flex justify-content-end gap-2">
             <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()" />
             <p-button label="Crear" (click)="crearSede()" />
@@ -113,21 +123,22 @@
             </div>
 
             <div class="col-4 flex align-items-center">
-                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span> </label>
+                <label for="ubicacion" class="font-semibold w-6rem">Ubicación:<span class="text-danger">*</span>
+                </label>
             </div>
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off" formControlName="ubicacion"
-                    pTooltip="Ingrese la ubicación de la sede" maxlength="51" />
+                <input pInputText class="flex-grow-1 w-full" id="ubicacion" autocomplete="off"
+                    formControlName="ubicacion" pTooltip="Ingrese la ubicación de la sede" maxlength="51" />
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('nombre')?.errors?.['required'] && (fg.get('nombre')?.dirty || fg.get('nombre')?.touched)">La
-                    ubicación es obligatoria</small>                    
+                    ubicación es obligatoria</small>
             </div>
 
-            
+
         </div>
 
-      
+
         <div class="flex justify-content-end gap-2">
             <p-button label="Cancelar" severity="secondary" (click)="cerrarEditarModal()" />
             <p-button label="Editar" (click)="editarSede()" />
