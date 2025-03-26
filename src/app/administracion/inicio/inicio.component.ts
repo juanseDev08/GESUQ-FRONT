@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { EspacioAcademicoService } from '../../services/espacio-academico.service';
+import { ReservaEspacioService } from '../../services/reserva-espacio.service';
+import { ReservaEspacio } from '../../model/reserva-espacio';
+import { EspacioAcademico } from '../../model/espacio-academico';
 
 @Component({
   selector: 'app-inicio',
@@ -7,6 +10,9 @@ import { EspacioAcademicoService } from '../../services/espacio-academico.servic
   styleUrl: './inicio.component.scss'
 })
 export class InicioComponent implements OnInit {
+
+  @Output() espacioAcademicoSeleccionado!: EspacioAcademico;
+
   semanaActual!: Date;
   daysInWeek = 7;
   selectedSlot: { date: string; time: string } | null = null;
@@ -14,7 +20,7 @@ export class InicioComponent implements OnInit {
   fechaSeleccionada!: String;
   intervaloHorario!: string;
   listEspacioAcademico!: any;
-  espacioAcademicoSeleccionado!: any;
+  listaReservas!: ReservaEspacio[];
   espaciosAcademicos = [
     { id: 1, nombre: 'Aula Matemáticas' },
     { id: 2, nombre: 'Aula Física' },
@@ -36,20 +42,16 @@ export class InicioComponent implements OnInit {
   ];
 
   disponibilidad: { [key: string]: { [key: string]: string } } = {
-    '2025-03-18': { '12:00 PM - 2:00 PM': 'Ocupado', '2:00 PM - 4:00 PM': 'Ocupado' },
-    '2025-03-19': { '10:00 AM - 12:00 PM': 'Ocupado', '12:00 PM - 2:00 PM': 'Ocupado' },
-    '2025-03-20': { '2:00 PM - 4:00 PM': 'Ocupado' },
-    '2025-03-22': { '7:00 PM - 9:00 PM': 'Disponible' },
-    '2025-03-28': { '7:00 PM - 9:00 PM': 'Disponible' }
   };
 
   ngOnInit() {
     this.semanaActual = this.obtenerDomingoActual();
     this.listarEspacioAcademico();
+    this.listarReservas();
   }
 
 
-  constructor(private espacioAcademicoService: EspacioAcademicoService) {
+  constructor(private espacioAcademicoService: EspacioAcademicoService, private reservaEspacioService: ReservaEspacioService) {
 
   }
 
@@ -90,7 +92,6 @@ export class InicioComponent implements OnInit {
     this.selectedSlot = { date: fecha.toISOString().split('T')[0], time };
     this.fechaSeleccionada = this.selectedSlot.date;
     this.intervaloHorario = this.selectedSlot.time;
-    console.log(`Seleccionaste: ${fecha.toISOString().split('T')[0]} a las ${time}`);
     this.display = true;
   }
 
@@ -98,15 +99,39 @@ export class InicioComponent implements OnInit {
     return this.selectedSlot?.date === date.toISOString().split('T')[0] && this.selectedSlot?.time === time;
   }
 
-  asignarEspacioAcademico(espacioAcademico: any) {
-    this.espacioAcademicoSeleccionado = espacioAcademico;
+  asignarEspacioAcademico(espacioAcademico: EspacioAcademico) {
+    this.disponibilidad = {};
+    this.espacioAcademicoSeleccionado = espacioAcademico
+
+    this.listaReservas.map((reserva) => {
+      if (reserva.espacioAcademico?.idEspacioAcademico===this.espacioAcademicoSeleccionado.idEspacioAcademico) {
+      
+          const llave = new Date(reserva.fechaReservaEspacio!).toISOString().split('T')[0];
+          if (!this.disponibilidad[llave]) {
+            this.disponibilidad[llave] = {};
+          }
+          this.disponibilidad[llave][reserva.horario!] = reserva.ocupado ? 'Ocupado' : 'Disponible';
+        
+      }
+    });
   }
 
   listarEspacioAcademico(): void {
     this.espacioAcademicoService.listarEspaciosAcademicos().subscribe({
       next: (dataespacioacademico) => {
         this.listEspacioAcademico = dataespacioacademico;
-        
+
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
+  }
+  listarReservas(): void {
+    this.reservaEspacioService.listarReservas().subscribe({
+      next: (datareserva) => {
+        this.listaReservas = datareserva;
+       if(this.espacioAcademicoSeleccionado){
+        this.asignarEspacioAcademico(this.espacioAcademicoSeleccionado);
+        }
       },
       error: (dataerror) => console.log(dataerror),
     });

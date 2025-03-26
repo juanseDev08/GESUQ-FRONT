@@ -1,12 +1,12 @@
 <div class="calendar-container col-12" *ngIf="espacioAcademicoSeleccionado">
-    <h2>{{espacioAcademicoSeleccionado.nombre}}</h2>
+    <h2 class="col-12 flex justify-content-center ">{{espacioAcademicoSeleccionado.nombre}}</h2>
 
-    <div class="navigation">
+    <div class="navigation col-12">
       <button pButton class="pi pi-arrow-left" (click)="changeWeek(-1)"></button>
       <button pButton class="pi pi-arrow-right" (click)="changeWeek(1)"></button>
     </div>
 
-    <p-table [value]="listaTiempos" class="col-12">
+    <p-table [value]="listaTiempos" class="col-12 w-full">
       <ng-template pTemplate="header">
         <tr>
           <th>Horarios</th>
