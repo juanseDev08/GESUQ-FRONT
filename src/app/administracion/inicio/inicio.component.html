@@ -4,5 +4,8 @@
       placeholder="Selecciona el aula" class=" flex-grow-1" [style]="{ width: '100%' }"
       (onChange)="asignarEspacioAcademico($event.value)" showClear="true">
     </p-dropdown>
+    <div class="col-12">
+      <app-tabla [espacioAcademicoSeleccionado]="espacioAcademicoSeleccionado" [listaReservas]="listaReservas"
+        [disponibilidad]="disponibilidad" (agendarEvento)="listarReservas()"></app-tabla>
+    </div>
   </div>
-  <app-tabla [espacioAcademicoSeleccionado]="espacioAcademicoSeleccionado"></app-tabla>
