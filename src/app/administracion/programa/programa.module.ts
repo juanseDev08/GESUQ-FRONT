@@ -15,6 +15,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CardModule } from 'primeng/card';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    DropdownModule
   ]
 })
 export class ProgramaModule { }

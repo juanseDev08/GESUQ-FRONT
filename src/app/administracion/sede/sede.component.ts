@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SedeService } from '../../services/sede.service';
 import { MessageService } from 'primeng/api';
 import { UtilConstants } from '../../util/util-constants';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sede',
@@ -21,9 +22,24 @@ export class SedeComponent implements OnInit {
   displayCrearSede: boolean = false;
   displayEditarSede: boolean = false;
 
+  filteredOptions?: any[];
+  selectedOption: any = null;
+
   noDocumento?: string;
 
   mensaje = Utilities;
+
+  listaOpciones = [
+    {
+      icono: 'pi pi-pen-to-square',
+      nombre: 'Editar',
+      tooltip: 'Abrir modal para editar la sede',
+    },
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   fg = new FormGroup({
 
@@ -48,13 +64,31 @@ export class SedeComponent implements OnInit {
   //----- Metodos que permiten listar 
 
   listarSedes(): void {
+    this.listSedes = []; 
     this.sedeService.listarSedes().subscribe({
       next: (datasede) => {
         this.listSedes = datasede;
       },
-      error: (error) => console.error('Error al listar sedes:', error),
+      error: (error) =>   console.error('Error al listar sedes:', error) 
     });
   }
+
+  abrirModal(opcion: any, sede: Isede): void {
+    switch (opcion.nombre) {
+      case 'Editar':
+        this.abrirEditarModal(sede);
+        break;
+      case 'Eliminar':
+        this.eliminar(sede);
+        break;
+
+      default:
+        break;
+    }
+    setTimeout(() => {
+      this.selectedOption = null;
+    }, 0);
+  } 
 
   abrirCrearModal() {
     this.fg.reset();
@@ -130,6 +164,30 @@ export class SedeComponent implements OnInit {
       this.mensaje.mensajeError("Error al editar", "Es necesario completar todos los campos del formulario para editar.");
     }
   }
+ 
+  eliminar(sede :Isede){
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará permanentemente la sede. ¿Deseas continuar?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#26670f",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, eliminar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("El id es: ", sede.idSede);
+        
+        this.sedeService.eliminarSede(sede.idSede!).subscribe({
+          next:(datasede)=>{
+            this.listarSedes();
+          }
+        });
+      }
+    });
+  }
+
   //----cerrar modales--//
   cerrarCrearModal(): void {
     this.displayCrearSede = false;

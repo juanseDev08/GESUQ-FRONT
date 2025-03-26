@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { IPrograma, Programa } from '../../model/programa-model';
 import { Utilities } from '../../util/utilities';
 import { UtilConstants } from '../../util/util-constants';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-programa',
@@ -21,9 +22,26 @@ export class ProgramaComponent implements OnInit {
   displayCrearPrograma: boolean = false;
   displayEditarPrograma: boolean = false;
 
+  filteredOptions?: any[];
+  selectedOption: any = null;
+
   noDocumento?:string;
   
   mensaje = Utilities;
+
+  
+  listaOpciones = [
+    {
+      icono: 'pi pi-pen-to-square',
+      nombre: 'Editar',
+      tooltip: 'Abrir modal para editar el programa',
+  
+    },
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   constructor(
     private programaService : ProgramaService,
@@ -44,9 +62,27 @@ export class ProgramaComponent implements OnInit {
     ]),
   })
 
+  abrirModal(opcion: any, programa: IPrograma): void {
+      switch (opcion.nombre) {
+        case 'Editar':
+          this.abrirEditarModal(programa);
+          break;
+        case 'Eliminar':
+          this.eliminar(programa);
+          break;
+  
+        default:
+          break;
+      }
+      setTimeout(() => {
+        this.selectedOption = null;
+      }, 0);
+    } 
+  
   
   //----- Metodos que permiten listar 
   listarProgramas():void{
+    this.listPrograma =[];
     this.programaService.listarProgramas().subscribe({
       next:(dataprograma) =>{
         this.listPrograma = dataprograma;
@@ -129,6 +165,26 @@ export class ProgramaComponent implements OnInit {
     }
   }
 
+  eliminar(programa :IPrograma){
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará permanentemente el programa. ¿Deseas continuar?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#26670f",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Si, eliminar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.programaService.eliminarPrograma(programa.idPrograma!).subscribe({
+            next:(dataprograma)=>{
+              this.listarProgramas();
+            }
+          });
+        }
+      });
+    }
 
  //----cerrar modales--//
   cerrarCrearModal(): void {

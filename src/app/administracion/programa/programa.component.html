@@ -36,12 +36,19 @@
                     <tr>
                         <td>{{ programa.codPrograma }}</td>
                         <td>{{ programa.nombre }}</td>
-                        <td>
-                            &nbsp;
-                            <p-button (onClick)="abrirEditarModal(programa)" icon="pi pi-pencil"
-                                styleClass="button-form"
-                                pTooltip="Abrir modal para editar el programa seleccionado"></p-button>
-                        </td>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre" placeholder="Opciones"
+                              appendTo="body" [(ngModel)]="selectedOption" (onChange)="abrirModal($event.value, programa)">
+                              <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                  [ngClass]="{'no-pointer': opcion.disable}">
+                                  <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla" [disabled]="opcion.disable"
+                                    [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                  <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
                     </tr>
                 </ng-template>
             </p-table>
