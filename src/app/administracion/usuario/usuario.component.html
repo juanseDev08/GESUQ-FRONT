@@ -46,7 +46,7 @@
                         <td>{{usuario.apellidos}}</td>
                         <td>{{usuario.usuario}}</td>
                         <td>
-                            <p-tag [value]="usuario.activo ? 'ACTIVO' : 'INACTIVO'"
+                            <p-tag  [value]="usuario.activo ? 'ACTIVO' : 'INACTIVO'"
                                 [severity]="getSeverity(usuario.activo)"></p-tag>
                         </td>
                         <td>
@@ -236,7 +236,18 @@
             <div class="col-4 flex align-items-center">
                 <label for="clave" class="font-semibold w-6rem">Contraseña:<span class="text-danger">*</span></label>
             </div>
+
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="clave" autocomplete="off" formControlName="clave"
+                    pTooltip="Ingrese el correo electronico" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('clave')?.errors?.['required'] && (fg.get('clave')?.dirty || fg.get('clave')?.touched)">El
+                    correo es oblicatorio</small>
+            </div>
+    
         </div>
+
 
         <div class="grid pb-3">
             <div class="col-4 flex align-items-center">

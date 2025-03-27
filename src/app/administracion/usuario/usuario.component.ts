@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
 import { MessageService } from 'primeng/api';
 import { UtilConstants } from '../../util/util-constants';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-usuario',
@@ -37,11 +38,10 @@ export class UsuarioComponent implements OnInit {
     ]),
     usuario: new FormControl('', [
       Validators.required
-    ]),    
-    admin: new FormControl(false),  
-    clave: new FormControl('', [
-      Validators.required
     ]),
+    admin: new FormControl(false),
+    clave: new FormControl(''),
+
     activo: new FormControl(false),
   });
 
@@ -60,9 +60,9 @@ export class UsuarioComponent implements OnInit {
   listarUsuarios(): void {
     this.usuarioService.listarUsuarios().subscribe({
       next: (datausuario) => {
-        this.listUsuarios = datausuario;  
-        console.log("dasdasdasd",datausuario);
-            
+        this.listUsuarios = datausuario;
+        console.log("dasdasdasd", datausuario);
+
       },
       error: (dataerror) => console.log(dataerror),
     });
@@ -82,63 +82,77 @@ export class UsuarioComponent implements OnInit {
     this.fg?.get('noDocumento')?.setValue(usuario.noDocumento!);
     this.fg?.get('nombres')?.setValue(usuario.nombres!);
     this.fg?.get('apellidos')?.setValue(usuario.apellidos!);
-    this.fg.get('clave')?.setValue(usuario.clave!);
-    this.fg?.get('usuario')?.setValue(usuario.usuario!);    
+    this.fg.get('clave')?.setValue('');
+    this.fg?.get('usuario')?.setValue(usuario.usuario!);
     this.fg?.get('admin')?.setValue(usuario.admin!);
     this.fg?.get('activo')?.setValue(usuario.activo!);
 
-    this.displayEditarUsuario=true;
-    
+    const clave = this.fg?.get('clave')?.value?.trim();
+
+    // ✅ Si la clave NO está vacía, se envía la nueva clave
+    if (clave) {
+      this.newUsuario.clave = clave;
+    } else {
+      // ✅ Si la clave está vacía, eliminamos el campo para que el backend no la actualice
+      delete this.newUsuario.clave;
+    }
+
+    this.displayEditarUsuario = true;
+
   }
 
-  crearUsuario(){
+  crearUsuario() {
     this.newUsuario.idUsuarioCreacion = this.noDocumento;
-    this.newUsuario.noDocumento=this.fg?.get('noDocumento')?.value!;
-    this.newUsuario.nombres=this.fg?.get('nombres')?.value!;
-    this.newUsuario.apellidos=this.fg?.get('apellidos')?.value!;
-    this.newUsuario.usuario=this.fg?.get('usuario')?.value!;
-    this.newUsuario.clave=this.fg?.get('clave')?.value!;
+    this.newUsuario.noDocumento = this.fg?.get('noDocumento')?.value!;
+    this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
+    this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
+    this.newUsuario.usuario = this.fg?.get('usuario')?.value!;
+    this.newUsuario.clave = this.fg?.get('clave')?.value!;
     this.newUsuario.admin = this.fg?.get('admin')?.value!;
-  
+
     if (this.fg.valid) {
       this.usuarioService.crearUsuario(this.newUsuario).subscribe({
-        next:(datausuario)=>{
+        next: (datausuario) => {
           this.messageService.add({
-            severity:'success',
-            summary:'CONFIRMACION',
-            detail:'Registro creado con exito',
+            severity: 'success',
+            summary: 'CONFIRMACION',
+            detail: 'Registro creado con exito',
           });
-          this.usuario=datausuario;
+          this.usuario = datausuario;
           this.listarUsuarios();
           this.cerrarCrearModal();
         },
-        error:(dataerror)=>{
+        error: (dataerror) => {
           this.messageService.add({
-            severity:'error',
-            summary:'ERROR',
-            detail:'El registro ingresado ya existe',
+            severity: 'error',
+            summary: 'ERROR',
+            detail: 'El registro ingresado ya existe',
           });
         },
       });
-      this.displayCrearUsuario=false;
+      this.displayCrearUsuario = false;
     } else {
-     this.mensaje.mensajeError("Error al crear","Es necesario completar todos los campos del formulario para crear.")
-   
+      this.mensaje.mensajeError("Error al crear", "Es necesario completar todos los campos del formulario para crear.")
+
     }
-    
+
   }
 
   editarUsuario() {
     this.newUsuario.idUsuarioModificacion = this.noDocumento;
-    this.newUsuario.noDocumento=this.fg?.get('noDocumento')?.value!;
-    this.newUsuario.nombres=this.fg?.get('nombres')?.value!;
-    this.newUsuario.apellidos=this.fg?.get('apellidos')?.value!;
-    this.newUsuario.usuario=this.fg?.get('usuario')?.value!;
-    console.log("asdasd ", this.getAdminValue()!);
-    
+    this.newUsuario.noDocumento = this.fg?.get('noDocumento')?.value!;
+    this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
+    this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
+    this.newUsuario.usuario = this.fg?.get('usuario')?.value!;
     this.newUsuario.admin = this.getAdminValue()!;
     this.newUsuario.activo = this.getActivoValue()!;
-
+  
+    //Asignar la clave antes de enviar
+    const clave = this.fg?.get('clave')?.value?.trim();
+    if (clave && clave.length > 0) {
+      this.newUsuario.clave = clave;
+    }
+  
     if (this.fg.valid) {
       this.usuarioService.actualizarUsuario(this.newUsuario).subscribe({
         next: datalistausuario => {
@@ -159,30 +173,35 @@ export class UsuarioComponent implements OnInit {
         },
       });
     } else {
-      this.mensaje.mensajeError("Error al editar","Es necesario completar todos los campos del formulario para editar.");
+      this.mensaje.mensajeError("Error al editar", "Es necesario completar todos los campos del formulario para editar.");
     }
+  }
+  
+  eliminarUsuario(usuario: IUsuario) {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará permanentemente la sede. ¿Deseas continuar?",
+    })
+  }
 
+  //----cerrar modales--//
+  cerrarCrearModal(): void {
+    this.displayCrearUsuario = false;
+  }
+
+  cerrarEditarModal(): void {
+    this.displayEditarUsuario = false;
 
   }
 
-    //----cerrar modales--//
-    cerrarCrearModal(): void {
-      this.displayCrearUsuario = false;
-    }
-  
-    cerrarEditarModal(): void {
-      this.displayEditarUsuario = false;
-  
-    }
-
-    getActivoValue(): boolean {
-      return !!this.fg?.get('activo')?.value;
-    }
-    getAdminValue(): boolean {
-      return !!this.fg?.get('admin')?.value;
-    }
-    getSeverity(esActivo: boolean): 'success' | 'danger' {
-      return esActivo ? 'success' : 'danger';
-    }
+  getActivoValue(): boolean {
+    return !!this.fg?.get('activo')?.value;
+  }
+  getAdminValue(): boolean {
+    return !!this.fg?.get('admin')?.value;
+  }
+  getSeverity(esActivo: boolean): 'success' | 'danger' {
+    return esActivo ? 'success' : 'danger';
+  }
 
 }
