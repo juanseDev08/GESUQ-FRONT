@@ -22,10 +22,10 @@ export class ReservaEspacioService {
   }
 
   public listarReservaPorUsuario(idUsuario: number): Observable<IReservaEspacio[]>{
-    return this.http.get<IReservaEspacio[]>(this.urlServicio+'/actualizaPrograma/'+ idUsuario);
+    return this.http.get<IReservaEspacio[]>(this.urlServicio+'/listarReservaPorUsuario/'+ idUsuario);
   }
 
-  public eliminarReserva(IreservaEspacio: number): Observable<IReservaEspacio>{
-    return this.http.delete(this.urlServicio+'/eliminarPrograma/'+IreservaEspacio);
+  public actualizarReserva(IreservaEspacio: IReservaEspacio): Observable<IReservaEspacio>{
+    return this.http.put(this.urlServicio+'/actualizarReserva',IreservaEspacio);
   }
 }

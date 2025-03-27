@@ -3,6 +3,7 @@ import { EspacioAcademicoService } from '../../services/espacio-academico.servic
 import { ReservaEspacioService } from '../../services/reserva-espacio.service';
 import { ReservaEspacio } from '../../model/reserva-espacio';
 import { EspacioAcademico } from '../../model/espacio-academico';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio',
@@ -51,7 +52,7 @@ export class InicioComponent implements OnInit {
   }
 
 
-  constructor(private espacioAcademicoService: EspacioAcademicoService, private reservaEspacioService: ReservaEspacioService) {
+  constructor(private espacioAcademicoService: EspacioAcademicoService, private reservaEspacioService: ReservaEspacioService, private router: Router) {
 
   }
 
@@ -135,5 +136,8 @@ export class InicioComponent implements OnInit {
       },
       error: (dataerror) => console.log(dataerror),
     });
+  }
+  irAMisReservas() {
+    this.router.navigate(['/administracion/mis-reservas']);
   }
 }
