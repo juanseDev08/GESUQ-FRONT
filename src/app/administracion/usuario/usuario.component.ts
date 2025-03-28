@@ -61,8 +61,6 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.listarUsuarios().subscribe({
       next: (datausuario) => {
         this.listUsuarios = datausuario;
-        console.log("dasdasdasd", datausuario);
-
       },
       error: (dataerror) => console.log(dataerror),
     });
@@ -141,12 +139,16 @@ export class UsuarioComponent implements OnInit {
   editarUsuario() {
     this.newUsuario.idUsuarioModificacion = this.noDocumento;
     this.newUsuario.noDocumento = this.fg?.get('noDocumento')?.value!;
-    this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
-    this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
     this.newUsuario.usuario = this.fg?.get('usuario')?.value!;
     this.newUsuario.admin = this.getAdminValue()!;
     this.newUsuario.activo = this.getActivoValue()!;
-  
+    
+    if((this.fg?.get('nombres')?.value != this.newUsuario.nombres) || (this.fg?.get('apellidos')?.value! != this.newUsuario.apellidos)){
+      this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
+      this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
+      location.reload();
+    }
+
     //Asignar la clave antes de enviar
     const clave = this.fg?.get('clave')?.value?.trim();
     if (clave && clave.length > 0) {

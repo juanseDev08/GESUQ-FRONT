@@ -48,10 +48,7 @@ export class AppComponent implements OnInit {
         label: 'Inicio',
         routerLink: 'administracion/inicio',
       },
-      {
-        label: 'Sede',
-        routerLink: 'administracion/sede',
-      },
+      
       {
         label: 'Espacio academico',
         routerLink: 'administracion/espacio-academico',
@@ -78,6 +75,19 @@ export class AppComponent implements OnInit {
           },
         ],
       },
+      {
+        label: 'Sede',
+        items:[
+          {
+            label: 'Sede',
+            routerLink: 'administracion/sede',
+          },
+          {
+            label: 'Sede y facultad',
+            routerLink: 'administracion/sede-facultad',
+          }
+        ],
+      }
     ];
   };
 
