@@ -22,9 +22,24 @@ export class UsuarioComponent implements OnInit {
   displayCrearUsuario: boolean = false;
   displayEditarUsuario: boolean = false;
 
+  filteredOptions?: any[];
+  selectedOption: any = null;
+
   noDocumento?: string;
 
   mensaje = Utilities;
+
+  listaOpciones = [
+    {
+      icono: 'pi pi-pencil',
+      nombre: 'Editar',
+      tooltip: 'Abrir modal para editar la sede',
+    },
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   fg = new FormGroup({
     nombres: new FormControl('', [
@@ -68,7 +83,22 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
+  abrirModal(opcion: any, usuario: IUsuario): void {
+    switch (opcion.nombre) {
+      case 'Editar':
+        this.abrirEditarModal(usuario);
+        break;
+      case 'Eliminar':
+        this.eliminarUsuario(usuario);
+        break;
 
+      default:
+        break;
+    }
+    setTimeout(() => {
+      this.selectedOption = null;
+    }, 0);
+  } 
 
   abrirCrearModal() {
     this.fg.reset();
@@ -89,11 +119,11 @@ export class UsuarioComponent implements OnInit {
 
     const clave = this.fg?.get('clave')?.value?.trim();
 
-    // ✅ Si la clave NO está vacía, se envía la nueva clave
+  
     if (clave) {
       this.newUsuario.clave = clave;
     } else {
-      // ✅ Si la clave está vacía, eliminamos el campo para que el backend no la actualice
+      
       delete this.newUsuario.clave;
     }
 
@@ -181,6 +211,23 @@ export class UsuarioComponent implements OnInit {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción eliminará permanentemente la sede. ¿Deseas continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#26670f',
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, eliminar"
+    }).then((result)=>{
+      if(result.isConfirmed){
+        console.log("El id es: ", usuario.idUsuario);
+
+        this.usuarioService.eliminarUsuario(usuario.idUsuario!).subscribe({
+          next:(datausuario)=>{
+            this.listarUsuarios();
+          }
+        })
+        
+      }
     })
   }
 

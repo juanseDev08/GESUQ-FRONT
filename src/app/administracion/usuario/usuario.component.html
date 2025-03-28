@@ -34,7 +34,7 @@
                         <th pSortableColumn="usuario">Email <p-sortIcon field="usuario"></p-sortIcon></th>
                         <th pSortableColumn="activo">Activo <p-sortIcon field="activo"></p-sortIcon></th>
                         <th pSortableColumn="admin">Administrador <p-sortIcon field="admin"></p-sortIcon></th>
-                        <th>Editar</th>
+                        <th>Acciones</th>
 
                     </tr>
 
@@ -53,10 +53,20 @@
                             <p-tag [value]="usuario.admin ? 'SI':'NO'"
                             [severity]="getSeverity(usuario.admin)"></p-tag>
                         </td>
-                        <td>
-                            &nbsp;
-                            <p-button (onClick)="abrirEditarModal(usuario)" icon="pi pi-pencil" styleClass="button-form"
-                                pTooltip="Abrir modal para editar la usuario seleccionada"></p-button>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
+                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
+                                (onChange)="abrirModal($event.value, usuario)">
+                                <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                        [ngClass]="{'no-pointer': opcion.disable}">
+                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
+                                            [disabled]="opcion.disable"
+                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </td>
                     </tr>
 

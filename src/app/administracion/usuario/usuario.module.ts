@@ -17,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
 import { PasswordModule } from 'primeng/password';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { PasswordModule } from 'primeng/password';
     InputTextModule,
     CardModule,
     CheckboxModule,
-    PasswordModule
+    PasswordModule,
+    DropdownModule
   ]
 
 })
