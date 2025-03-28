@@ -1,7 +1,6 @@
 export interface IEspacioAcademico{
     idEspacioAcademico?:number;
     nombre?:string;
-    semestre?:number;
     descripcion?:string;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
@@ -12,7 +11,6 @@ export interface IEspacioAcademico{
 export class EspacioAcademico implements IEspacioAcademico{
     idEspacioAcademico?:number;
     nombre?:string;
-    semestre?:number;
     descripcion?:string;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;

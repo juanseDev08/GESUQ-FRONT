@@ -58,6 +58,10 @@ export class AppComponent implements OnInit {
         routerLink: 'administracion/grupo',
       },
       {
+        label: 'Semestre',
+        routerLink: 'administracion/semestre',
+      },
+      {
         label: 'Usuario',
         routerLink: 'administracion/usuario',
       }    

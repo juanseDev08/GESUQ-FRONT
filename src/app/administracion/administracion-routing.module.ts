@@ -10,7 +10,8 @@ const routes: Routes = [{ path: 'inicio', loadChildren: () =>
   { path: 'facultad-programa', loadChildren: () => import('./facultad-programa/facultad-programa.module').then(m => m.FacultadProgramaModule) },
   { path: 'usuario', loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule) },
   { path: 'mis-reservas', loadChildren: () => import('./mis-reservas/mis-reservas.module').then(m => m.MisReservasModule) },
-  { path: 'sede-facultad', loadChildren: () => import('./sede-facultad/sede-facultad.module').then(m => m.SedeFacultadModule) }]
+  { path: 'sede-facultad', loadChildren: () => import('./sede-facultad/sede-facultad.module').then(m => m.SedeFacultadModule) },
+  { path: 'semestre', loadChildren: () => import('./semestre/semestre.module').then(m => m.SemestreModule) }]
   ;
 
 @NgModule({
