@@ -43,9 +43,8 @@ export class FacultadProgramaComponent implements OnInit {
   })
 
   constructor(
-    private facultadServce: FacultadService,
+    private facultadService: FacultadService,
     private programaService: ProgramaService,
-    private storageService: StorageService,
     private messageService: MessageService,
     private facultadProgramaService: FacultadProgramaService
   ) { }
@@ -58,7 +57,7 @@ export class FacultadProgramaComponent implements OnInit {
   }
 
   listarFacultades() {
-    this.facultadServce.listarFacultades().subscribe({
+    this.facultadService.listarFacultades().subscribe({
       next: (datafacultad) => {
         this.listFacultades = datafacultad;
       },
@@ -81,12 +80,12 @@ export class FacultadProgramaComponent implements OnInit {
   }
 
   listarFacultadPrograma(){
+    this.listaFacultadPrograma =[]
     this.facultadProgramaService.listarFacultadPrograma().subscribe({
       next:(datafacultadprograma)=>{
           this.listaFacultadPrograma=datafacultadprograma;
       },
-      error: (dataerror) => { console.error(dataerror);
-        this.listaFacultadPrograma =[]},
+      error: (dataerror) =>console.error(dataerror),
     });
   }
 
