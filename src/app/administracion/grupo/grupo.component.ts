@@ -100,31 +100,31 @@ export class GrupoComponent implements OnInit {
     this.displayCrearGrupo = true;
   }
 
-  abrirEditarModal(grupo: Grupo) {
-    this.fg.reset();
-    this.newGrupo = { ...grupo };
-    this.fg?.get('nombreGrupo')?.setValue(grupo.nombreGrupo!);
-    this.fg?.get('semestre')?.setValue(grupo.semestre!);
-    this.displayEditarGrupo = true;
+   abrirEditarModal(grupo: Grupo) {
+      this.fg.reset();
+      this.newGrupo = { ...grupo };
+      this.fg?.get('nombreGrupo')?.setValue(grupo.nombreGrupo!);
+      this.fg?.get('semestre')?.setValue(grupo.semestre!);
+      this.displayEditarGrupo = true;
+  
+    }
 
-  }
-
-  crearGrupo() {
+    // -- Metodo de crear -- //
+  creargrupo() {
     this.newGrupo.nombreGrupo = this.fg?.get('nombreGrupo')?.value!;
-    this.newGrupo.semestre = this.fg?.get('semestre')?.value!;
+    this.newGrupo.semestre= this.fg?.get('semestre')?.value!;
     this.newGrupo.idUsuarioCreacion = this.noDocumento;
     if (this.fg.valid) {
       this.GrupoService.crearGrupo(this.newGrupo).subscribe({
         next: (datagrupo) => {
           this.messageService.add({
-            severity: "success",
-            summary: "CONFIRMACION",
-            detail: "Registro creado con exito",
+            severity: 'success',
+            summary: 'CONFIRMACION',
+            detail: 'Registro creado con exito',
           });
           this.grupo = datagrupo;
           this.listarGrupos();
           this.cerrarCrearModal();
-
         },
         error: (dataerror) => {
           this.messageService.add({
@@ -142,57 +142,56 @@ export class GrupoComponent implements OnInit {
   }
 
   editarGrupo(): void {
-    this.newGrupo.nombreGrupo=this.fg?.get('nombreGrupo')?.value!;
-    this.newGrupo.semestre=this.fg?.get('semestre')?.value!;
-    this.newGrupo.idUsuarioModificacion=this.noDocumento;
-
+    this.newGrupo.nombreGrupo = this.fg?.get('nombreGrupo')?.value!;
+    this.newGrupo.semestre = this.fg?.get('semestre')?.value!;
+    this.newGrupo.idUsuarioModificacion = this.noDocumento;
     if (this.fg.valid) {
       this.GrupoService.actualizarGrupo(this.newGrupo).subscribe({
         next:(datagrupo)=>{
           this.messageService.add({
             severity:'success',
             summary:'CONFIRMACION',
-            detail:'Registro actualizado con exito'
+            detail:'Registro actualizado con exito',
           });
-          this.listGrupos!=datagrupo;
+          this.listGrupos != datagrupo;
           this.listarGrupos();
           this.cerrarEditarModal();
         },
         error:(dataerror)=>{
           this.messageService.add({
-            severity:'success',
-            summary:'CONFIRMACION',
-            detail:'Registro ingresado ya existe'
-          })
-        }
-      })
+            severity:'error',
+            summary:'ERROR',
+            detail:'El registro ingresado ya existe'
+          });
+        },
+      });
     } else {
-      this.mensaje.mensajeError("Error al editar", "Es necesario completar todos los campos del formulario para editar.");  
+      this.mensaje.mensajeError("Error al editar", "Es necesario completar todos los campos del formulario para editar.");
     }
   }
 
-  eliminarGrupo(grupo: Grupo) {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Esta acción eliminará permanentemente el grupo. ¿Deseas continuar?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#26670f",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, eliminar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        console.log("El id es: ", grupo.idGrupo);
-
-        this.GrupoService.eliminarGrupo(grupo.idGrupo!).subscribe({
-          next: (datagrupo) => {
-            this.listarGrupos();
+     eliminarGrupo(grupo :Grupo){
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción eliminará permanentemente el grupo. ¿Deseas continuar?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#26670f",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Si, eliminar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            console.log("El id es: ", grupo.idGrupo);
+            
+            this.GrupoService.eliminarGrupo(grupo.idGrupo!).subscribe({
+              next:(datagrupo)=>{
+                this.listarGrupos();
+              }
+            });
           }
         });
       }
-    });
-  }
   //----cerrar modales--//
   cerrarCrearModal(): void {
     this.displayCrearGrupo = false;

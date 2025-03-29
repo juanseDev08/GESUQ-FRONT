@@ -4,7 +4,7 @@
         <span style="color: rgb(50, 134, 57)">GRUPOS</span>
     </h2>
 </div>
-
+<!--Tabla confiltro-->
 <p-card>
     <div class="grid">
         <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
@@ -38,7 +38,7 @@
                         <td>{{ grupo.nombreGrupo }}</td>
                         <td>{{ grupo.semestre }}</td>
                         <td class="text-center">
-                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombreGrupo"
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
                                 placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
                                 (onChange)="abrirModal($event.value, grupo)">
                                 <ng-template let-opcion pTemplate="item" class="no-pointer">
@@ -59,7 +59,7 @@
     </div>
 </p-card>
 <!-- Crear grupo-->
-<p-dialog header="Agregar Grupo" [closable]="false" [modal]="true" [(visible)]="displayCrearGrupo"
+<p-dialog header="Agregar grupo" [closable]="false" [modal]="true" [(visible)]="displayCrearGrupo"
     [style]="{ width: '100%', 'max-width': '25rem' }">
     <div [formGroup]="fg!">
         <div class="grid pb-3">
@@ -67,11 +67,9 @@
                 <label for="nombreGrupo" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span></label>
             </div>
 
-
-
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off"
-                    formControlName="nombreGrupo" pTooltip="Ingrese el nombre del grupo" />
+                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off" formControlName="nombreGrupo"
+                    pTooltip="Ingrese el nombre del espacio" />
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('nombreGrupo')?.errors?.['required'] && (fg.get('nombreGrupo')?.dirty || fg.get('nombreGrupo')?.touched)">El
@@ -84,25 +82,24 @@
                 <label for="semestre" class="font-semibold w-6rem">Semestre:<span class="text-danger">*</span></label>
             </div>
 
-
-
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="semestre" autocomplete="off" formControlName="semestre"
-                    pTooltip="Ingrese el semestre del grupo" />
+                <input pInputText class="flex-grow-1 w-full" id="semestre" autocomplete="off"
+                    formControlName="semestre" pTooltip="Ingrese el semestre del grupo" />
                 <br />
                 <small class="p-error"
-                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El
-                    Semestre es obligatorio</small>
+                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El semestre
+                     es obligatorio</small>
             </div>
         </div>
 
 
         <div class="flex justify-content-end gap-2">
             <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()" />
-            <p-button label="Crear" (click)="crearGrupo()" />
+            <p-button label="Crear" (click)="creargrupo()" />
         </div>
     </div>
 </p-dialog>
+
 
 <!-- Editar Grupo-->
 <p-dialog header="Editar Grupo" [closable]="false" [modal]="true" [(visible)]="displayEditarGrupo"
@@ -114,7 +111,7 @@
             </div>
             <div class="col-8">
                 <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off" formControlName="nombreGrupo"
-                    pTooltip="Ingrese el nombre del grupo" maxlength="51" />
+                    pTooltip="Ingrese el nombre del espacio" maxlength="51" />
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('nombreGrupo')?.errors?.['required'] && (fg.get('nombreGrupo')?.dirty || fg.get('nombreGrupo')?.touched)">El
@@ -130,8 +127,8 @@
                     formControlName="semestre" pTooltip="Ingrese el semestre del grupo" maxlength="51" />
                 <br />
                 <small class="p-error"
-                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El
-                    Semestre es obligatorio</small>
+                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El semestre
+                     es obligatoria</small>
             </div>
 
 
