@@ -28,9 +28,6 @@ export class EspacioAcademicoComponent implements OnInit {
     nombre: new FormControl('', [
       Validators.required
     ]),
-    semestre: new FormControl(0, [
-      Validators.required
-    ]),
     descripcion: new FormControl('', [
       Validators.required
     ]),
@@ -68,7 +65,6 @@ abrirEditarModal(espacioAcademico : EspacioAcademico){
   this.fg.reset();
   this.newEspacioAcademico ={...espacioAcademico };
   this.fg?.get('nombre')?.setValue(espacioAcademico.nombre!);
-  this.fg?.get('semestre')?.setValue(espacioAcademico.semestre!);
   this.fg?.get('descripcion')?.setValue(espacioAcademico.descripcion!);
   this.displayEditarEspacioAcademico=true;
 }
@@ -77,7 +73,6 @@ abrirEditarModal(espacioAcademico : EspacioAcademico){
 
 crearEspacoAcademico(){
   this.newEspacioAcademico.nombre =  this.fg?.get('nombre')?.value!;
-  this.newEspacioAcademico.semestre =  this.fg?.get('semestre')?.value!;
   this.newEspacioAcademico.descripcion = this.fg?.get('descripcion')?.value!;
   this.newEspacioAcademico.idUsuarioCreacion = this.noDocumento;
   if(this.fg.valid){
@@ -109,7 +104,6 @@ crearEspacoAcademico(){
 
 editarEspacioAcademico(){
   this.newEspacioAcademico.nombre =  this.fg?.get('nombre')?.value!;
-  this.newEspacioAcademico.semestre =  this.fg?.get('semestre')?.value!;
   this.newEspacioAcademico.descripcion = this.fg?.get('descripcion')?.value!;
   this.newEspacioAcademico.idUsuarioModificacion = this.noDocumento;
   if(this.fg.valid){
