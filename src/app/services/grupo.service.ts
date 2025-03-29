@@ -12,7 +12,7 @@ export class GrupoService {
  urlServicio = environment.urlbackend + '/api/grupo';
      constructor(private http: HttpClient) { }
      public listarGrupos(): Observable<IGrupo[]> {
-         return this.http.get<IGrupo[]>(this.urlServicio + '/listaGrupos');
+         return this.http.get<IGrupo[]>(this.urlServicio + '/listarGrupos');
  
      }
  

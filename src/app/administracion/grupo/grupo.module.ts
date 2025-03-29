@@ -18,7 +18,6 @@ import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 
 
-
 @NgModule({
   declarations: [
     GrupoComponent
@@ -40,7 +39,6 @@ import { DropdownModule } from 'primeng/dropdown';
     InputTextModule,
     CardModule,
     DropdownModule
-
   ]
 })
 export class GrupoModule { }
