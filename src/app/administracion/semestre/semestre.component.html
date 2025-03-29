@@ -1,0 +1,99 @@
+<p-toast />
+<div class="centered-title">
+    <h2>
+        <span style="color: rgb(50, 134, 57)">SEMESTRES</span>
+    </h2>
+</div>
+<!--Tabla confiltro-->
+<p-card>
+    <div class="grid">
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
+                pTooltip="Abrir modal para crear una sede" />
+        </div>
+        <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
+            <p-iconField iconPosition="right">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" (input)="
+            tablasemestre.filterGlobal($any($event.target)!.value, 'contains')
+          " placeholder="Filtrar" [style]="{ width: '100%' }" />
+            </p-iconField>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-offset-1 col-10">
+            <p-table [value]="listSemestre" #tablasemestre [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true"
+                [rows]="5" [globalFilterFields]="['noSemestre','descripcion']" [rowsPerPageOptions]="[5, 10]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="noSemestre">Semestre <p-sortIcon field="noSemestre"></p-sortIcon></th>
+                        <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </ng-template>
+                <ng-template pTemplate="body" let-semestre>
+                    <tr>
+                        <td>{{ semestre.noSemestre }}</td>
+                        <td>{{ semestre.descripcion }}</td>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
+                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
+                                (onChange)="abrirModal($event.value, semestre)">
+                                <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                        [ngClass]="{'no-pointer': opcion.disable}">
+                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
+                                            [disabled]="opcion.disable"
+                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+<!-- Crear sede-->
+<p-dialog header="Agregar Semestre" [closable]="false" [modal]="true" [(visible)]="displayCrearSemestre"
+    [style]="{ width: '100%', 'max-width': '35rem' }">
+    <div [formGroup]="fg!">
+        <div class="grid pb-3">
+            <div class="col-4 flex align-items-center">
+                <label for="nombre" class="font-semibold w-6rem">N° semestre:<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-8">
+                <p-inputNumber id="noSemestre" name="noSemestre" inputStyleClass="flex-grow-1" formControlName="noSemestre"
+                [min]="0" autocomplete="off" [showButtons]="true" pTooltip="Ingrese el semestre "></p-inputNumber>
+            <br />
+            <small class="p-error"
+                *ngIf="fg.get('noSemestre')?.errors?.['required'] && (fg.get('noSemestre')?.dirty || fg.get('noSemestre')?.touched)">El
+                semestre es obligatorio</small>
+            </div>
+        </div>
+
+        <div class="grid pb-3">
+            <div class="col-4 flex align-items-center">
+                <label for="descripcion" class="font-semibold w-6rem">Descripción:<span class="text-danger">*</span></label>
+            </div>
+
+            <div class="col-8">
+                <input pInputText class="flex-grow-1 w-full" id="descripcion" autocomplete="off"
+                    formControlName="descripcion" pTooltip="Ingrese la descripción del semestre"  [style]="{ width: '100%' }" />
+                <br />
+                <small class="p-error"
+                    *ngIf="fg.get('descripcion')?.errors?.['required'] && (fg.get('descripcion')?.dirty || fg.get('descripcion')?.touched)">La
+                    descripción es obligatoria</small>
+            </div>
+        </div>
+
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()" />
+            <p-button label="Crear" (click)="crearSemestre()" />
+        </div>
+    </div>
+</p-dialog>
