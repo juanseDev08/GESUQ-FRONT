@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(valorUsuario, valorPassword).subscribe({
       next: (respuesta) => {
-        console.log("entre",respuesta);
         this.storageService.guardar(respuesta);
         const userRoles = this.storageService.tipoUsuario();
         if (userRoles.length > 0) {

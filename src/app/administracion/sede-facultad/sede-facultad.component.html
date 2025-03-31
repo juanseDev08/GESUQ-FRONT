@@ -1,0 +1,77 @@
+<p-toast />
+<div class="centered-title">
+    <h2>
+        <span style="color: rgb(50, 134, 57)">SEDE </span>
+        <span style="color: rgb(15, 15, 15)">FACULTAD</span>
+    </h2>
+</div>
+<!--Tabla confiltro-->
+<p-card>
+    <div class="grid">
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
+                pTooltip="Abrir modal para crear un espacio" />
+        </div>
+        <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
+            <p-iconField iconPosition="right">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" (input)="
+            tablaSedeFacultad.filterGlobal($any($event.target)!.value, 'contains')
+          " placeholder="Filtrar" [style]="{ width: '100%' }" />
+            </p-iconField>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-offset-1 col-10">
+            <p-table [value]="listaSedeFacultad" #tablaSedeFacultad [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true" [rows]="5" [globalFilterFields]="['sede.nombreSede', 'facultad.nombreFacultad']"
+                [rowsPerPageOptions]="[5, 10]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="sede">Sede <p-sortIcon field="sede"></p-sortIcon></th>
+                        <th pSortableColumn="facultad">Facultad <p-sortIcon field="facultad"></p-sortIcon></th>
+                        <th>Acciones</th>
+                      
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-sedeFacultad>
+                    <tr>
+                        <td>{{ sedeFacultad.sede.nombreSede }}</td>
+                        <td>{{ sedeFacultad.facultad.nombreFacultad }}</td>
+                        <td>
+                            &nbsp;
+                            <p-button (onClick)="eliminar(sedeFacultad)" icon="pi pi-trash" styleClass="button-form"
+                              pTooltip="Abrir modal para editar la facultad seleccionado"></p-button>
+                          </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+<!-- CREAR SEDE FACULTAD-->
+<p-dialog header="Sede facultad" [closable]="false" [modal]="true" [(visible)]="displayCrearSedeFacultad"
+    [style]="{ width: '90%', 'max-width': '45rem' }">
+    <div [formGroup]="fg!"> 
+        <div class="grid pb-3">
+            <div class="col-12 md:col-10 xl:col-12 flex justify-content-between">
+                <label for="Sede" class="font-semibold  flex align-items-center col-2">Sede:<span
+                        class="text-danger ">*</span></label>
+                <p-dropdown id="sede" name="sede" optionLabel="nombreSede" [options]="listSedes"  
+                    (onChange)="sedeSelecconada($event.value)" formControlName="sede" optionValue="idSede" appendTo="body" placeholder="Seleccione" class="flex-grow-1 truncate-text col-6"
+                    [style]="{ width: '100%' }"  [showClear]="true" ></p-dropdown>
+                    <!-- (onClear)="limpiarListaTabla()" pTooltip="Seleccione la sede que desea asociar las facultades." [showClear]="true" -->
+                </div>
+            <div  class="col-12 md:col-10 xl:col-12 flex justify-content-between"  >
+                <label for="facultad" class="font-semibold  flex align-items-center col-2">Facultad:<span
+                    class="text-danger ">*</span></label>
+                <p-multiSelect id="facultad" name="facultad" [options]="listFacultades"  class="flex-grow-1"  optionLabel="nombreFacultad"  formControlName="facultad" (onChange)="asignarFacultades($event.value)"
+                appendTo="body"   placeholder="Seleccione las facultades"  pTooltip="Seleccione las facultades que desee asociar a la sede." [style]="{ width: '100%' }"   [showClear]="true"/>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()"  />
+        <p-button label="Crear" (click)="crearSedeFacultad()"  />
+    </div>
+</p-dialog>

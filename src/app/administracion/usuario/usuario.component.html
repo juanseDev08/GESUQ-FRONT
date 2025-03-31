@@ -34,7 +34,7 @@
                         <th pSortableColumn="usuario">Email <p-sortIcon field="usuario"></p-sortIcon></th>
                         <th pSortableColumn="activo">Activo <p-sortIcon field="activo"></p-sortIcon></th>
                         <th pSortableColumn="admin">Administrador <p-sortIcon field="admin"></p-sortIcon></th>
-                        <th>Editar</th>
+                        <th>Acciones</th>
 
                     </tr>
 
@@ -46,17 +46,26 @@
                         <td>{{usuario.apellidos}}</td>
                         <td>{{usuario.usuario}}</td>
                         <td>
-                            <p-tag  [value]="usuario.activo ? 'ACTIVO' : 'INACTIVO'"
+                            <p-tag [value]="usuario.activo ? 'ACTIVO' : 'INACTIVO'"
                                 [severity]="getSeverity(usuario.activo)"></p-tag>
                         </td>
                         <td>
-                            <p-tag [value]="usuario.admin ? 'SI':'NO'"
-                            [severity]="getSeverity(usuario.admin)"></p-tag>
+                            <p-tag [value]="usuario.admin ? 'SI':'NO'" [severity]="getSeverity(usuario.admin)"></p-tag>
                         </td>
-                        <td>
-                            &nbsp;
-                            <p-button (onClick)="abrirEditarModal(usuario)" icon="pi pi-pencil" styleClass="button-form"
-                                pTooltip="Abrir modal para editar la usuario seleccionada"></p-button>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
+                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
+                                (onChange)="abrirModal($event.value, usuario)">
+                                <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                        [ngClass]="{'no-pointer': opcion.disable}">
+                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
+                                            [disabled]="opcion.disable"
+                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </td>
                     </tr>
 
@@ -145,7 +154,7 @@
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('clave')?.errors?.['required'] && (fg.get('clave')?.dirty || fg.get('clave')?.touched)">La
-                    contraseña es oblicatoria</small>
+                    contraseña es obligatoria</small>
             </div>
         </div>
 
@@ -236,16 +245,16 @@
             <div class="col-4 flex align-items-center">
                 <label for="clave" class="font-semibold w-6rem">Contraseña:<span class="text-danger">*</span></label>
             </div>
-
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="clave" autocomplete="off" formControlName="clave"
-                    pTooltip="Ingrese el correo electronico" />
+                <p-password formControlName="clave" id="clave" type="clave" placeholder="clave"
+                    inputStyleClass="flex w-full" [feedback]="false" [toggleMask]="true" class=" flex mb-3"
+                    [style]="{ width: '100%' }" pTooltip="Ingrese una contraseña" />
                 <br />
                 <small class="p-error"
-                    *ngIf="fg.get('clave')?.errors?.['required'] && (fg.get('clave')?.dirty || fg.get('clave')?.touched)">El
-                    correo es oblicatorio</small>
+                    *ngIf="fg.get('clave')?.errors?.['required'] && (fg.get('clave')?.dirty || fg.get('clave')?.touched)">La
+                    contraseña es obligatorio</small>
             </div>
-    
+
         </div>
 
 
@@ -262,14 +271,15 @@
                 <label for="activo" class="font-semibold w-6rem">Activo:</label>
             </div>
             <div class="col-8">
-                <p-checkbox id="activo" binary="true" formControlName="activo"  pTooltip="Marque la casilla si el usuario esta inactivo" />
+                <p-checkbox id="activo" binary="true" formControlName="activo"
+                    pTooltip="Marque la casilla si el usuario esta inactivo" />
 
             </div>
         </div>
 
         <div class="flex justify-content-end gap-2">
             <p-button label="Cancelar" severity="secondary" (click)="cerrarEditarModal()" />
-            <p-button label="Crear" (click)="editarUsuario()" />
+            <p-button label="Editar" (click)="editarUsuario()" />
         </div>
     </div>
 </p-dialog>

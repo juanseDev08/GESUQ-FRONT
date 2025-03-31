@@ -22,9 +22,11 @@ import { FormsModule } from '@angular/forms';
 
 import { DropdownModule } from 'primeng/dropdown';
 
+
 import '@angular/common/locales/global/es-CO';
 import { LoginComponent } from './login/login.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+
 
 
 @NgModule({
@@ -53,6 +55,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     InputSwitchModule,
     FormsModule,
     DropdownModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

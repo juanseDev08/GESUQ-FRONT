@@ -22,9 +22,24 @@ export class UsuarioComponent implements OnInit {
   displayCrearUsuario: boolean = false;
   displayEditarUsuario: boolean = false;
 
+  filteredOptions?: any[];
+  selectedOption: any = null;
+
   noDocumento?: string;
 
   mensaje = Utilities;
+
+  listaOpciones = [
+    {
+      icono: 'pi pi-pencil',
+      nombre: 'Editar',
+      tooltip: 'Abrir modal para editar la sede',
+    },
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   fg = new FormGroup({
     nombres: new FormControl('', [
@@ -61,14 +76,27 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.listarUsuarios().subscribe({
       next: (datausuario) => {
         this.listUsuarios = datausuario;
-        console.log("dasdasdasd", datausuario);
-
       },
       error: (dataerror) => console.log(dataerror),
     });
   }
 
+  abrirModal(opcion: any, usuario: IUsuario): void {
+    switch (opcion.nombre) {
+      case 'Editar':
+        this.abrirEditarModal(usuario);
+        break;
+      case 'Eliminar':
+        this.eliminarUsuario(usuario);
+        break;
 
+      default:
+        break;
+    }
+    setTimeout(() => {
+      this.selectedOption = null;
+    }, 0);
+  } 
 
   abrirCrearModal() {
     this.fg.reset();
@@ -89,11 +117,11 @@ export class UsuarioComponent implements OnInit {
 
     const clave = this.fg?.get('clave')?.value?.trim();
 
-    // ✅ Si la clave NO está vacía, se envía la nueva clave
+  
     if (clave) {
       this.newUsuario.clave = clave;
     } else {
-      // ✅ Si la clave está vacía, eliminamos el campo para que el backend no la actualice
+      
       delete this.newUsuario.clave;
     }
 
@@ -141,12 +169,16 @@ export class UsuarioComponent implements OnInit {
   editarUsuario() {
     this.newUsuario.idUsuarioModificacion = this.noDocumento;
     this.newUsuario.noDocumento = this.fg?.get('noDocumento')?.value!;
-    this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
-    this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
     this.newUsuario.usuario = this.fg?.get('usuario')?.value!;
     this.newUsuario.admin = this.getAdminValue()!;
     this.newUsuario.activo = this.getActivoValue()!;
-  
+    
+    if((this.fg?.get('nombres')?.value != this.newUsuario.nombres) || (this.fg?.get('apellidos')?.value! != this.newUsuario.apellidos)){
+      this.newUsuario.nombres = this.fg?.get('nombres')?.value!;
+      this.newUsuario.apellidos = this.fg?.get('apellidos')?.value!;
+      location.reload();
+    }
+
     //Asignar la clave antes de enviar
     const clave = this.fg?.get('clave')?.value?.trim();
     if (clave && clave.length > 0) {
@@ -181,6 +213,23 @@ export class UsuarioComponent implements OnInit {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción eliminará permanentemente la sede. ¿Deseas continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#26670f',
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, eliminar"
+    }).then((result)=>{
+      if(result.isConfirmed){
+        console.log("El id es: ", usuario.idUsuario);
+
+        this.usuarioService.eliminarUsuario(usuario.idUsuario!).subscribe({
+          next:(datausuario)=>{
+            this.listarUsuarios();
+          }
+        })
+        
+      }
     })
   }
 

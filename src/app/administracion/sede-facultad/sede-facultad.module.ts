@@ -1,49 +1,50 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UsuarioRoutingModule } from './usuario-routing.module';
-import { UsuarioComponent } from './usuario.component';
+import { SedeFacultadRoutingModule } from './sede-facultad-routing.module';
+import { SedeFacultadComponent } from './sede-facultad.component';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
-import { PasswordModule } from 'primeng/password';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+
+
 
 
 @NgModule({
   declarations: [
-    UsuarioComponent
+    SedeFacultadComponent
   ],
   imports: [
     CommonModule,
-    UsuarioRoutingModule,
+    SedeFacultadRoutingModule,
     TableModule,
-    ToastModule,
     ToolbarModule,
+    ToastModule,
     ButtonModule,
     DialogModule,
     FormsModule,
     ReactiveFormsModule,
+    CheckboxModule,
     TooltipModule,
     TagModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
     CardModule,
-    CheckboxModule,
-    PasswordModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule
   ]
-
 })
-export class UsuarioModule { }
+export class SedeFacultadModule { }

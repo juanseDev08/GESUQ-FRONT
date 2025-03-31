@@ -31,7 +31,7 @@ export class SedeComponent implements OnInit {
 
   listaOpciones = [
     {
-      icono: 'pi pi-pen-to-square',
+      icono: 'pi pi-pencil',
       nombre: 'Editar',
       tooltip: 'Abrir modal para editar la sede',
     },

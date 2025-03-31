@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UsuarioRoutingModule } from './usuario-routing.module';
-import { UsuarioComponent } from './usuario.component';
+import { GrupoRoutingModule } from './grupo-routing.module';
+import { GrupoComponent } from './grupo.component';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
@@ -14,19 +14,17 @@ import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
-import { PasswordModule } from 'primeng/password';
 import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
   declarations: [
-    UsuarioComponent
+    GrupoComponent
   ],
   imports: [
     CommonModule,
-    UsuarioRoutingModule,
+    GrupoRoutingModule,
     TableModule,
     ToastModule,
     ToolbarModule,
@@ -40,10 +38,7 @@ import { DropdownModule } from 'primeng/dropdown';
     InputIconModule,
     InputTextModule,
     CardModule,
-    CheckboxModule,
-    PasswordModule,
     DropdownModule
   ]
-
 })
-export class UsuarioModule { }
+export class GrupoModule { }
