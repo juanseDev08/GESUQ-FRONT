@@ -28,7 +28,7 @@ export class SemestreComponent implements OnInit{
     noDocumento?: string;
   
     mensaje = Utilities;
-    listaOpciones = [
+/*     listaOpciones = [
       {
         icono: 'pi pi-pen-to-square',
         nombre: 'Editar',
@@ -38,7 +38,7 @@ export class SemestreComponent implements OnInit{
         icono: 'pi pi-trash',
         nombre: 'Eliminar',
       }
-    ];
+    ]; */
   
 
       fg = new FormGroup({
@@ -135,7 +135,7 @@ export class SemestreComponent implements OnInit{
 
   }
 
- editarSede(): void {
+/*  editarSede(): void {
   this.newSemestre.noSemestre= this.fg?.get('noSemestre')?.value!;
   this.newSemestre.descripcion = this.fg?.get('descripcion')?.value!;
   this.newSemestre.idUsuarioCreacion = this.noDocumento;
@@ -163,7 +163,7 @@ export class SemestreComponent implements OnInit{
       this.mensaje.mensajeError("Error al editar", "Es necesario completar todos los campos del formulario para editar.");
     }
   }
- 
+  */
   eliminar(semestre :ISemestre){
     Swal.fire({
       title: "¿Estás seguro?",

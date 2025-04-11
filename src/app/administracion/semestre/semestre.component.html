@@ -38,19 +38,9 @@
                         <td>{{ semestre.noSemestre }}</td>
                         <td>{{ semestre.descripcion }}</td>
                         <td class="text-center">
-                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
-                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
-                                (onChange)="abrirModal($event.value, semestre)">
-                                <ng-template let-opcion pTemplate="item" class="no-pointer">
-                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
-                                        [ngClass]="{'no-pointer': opcion.disable}">
-                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
-                                            [disabled]="opcion.disable"
-                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
-                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
-                                    </div>
-                                </ng-template>
-                            </p-dropdown>
+                  
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-danger" 
+                            (click)="eliminar(semestre)" pTooltip="Eliminar"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -58,7 +48,7 @@
         </div>
     </div>
 </p-card>
-<!-- Crear sede-->
+<!-- Crear semestre-->
 <p-dialog header="Agregar Semestre" [closable]="false" [modal]="true" [(visible)]="displayCrearSemestre"
     [style]="{ width: '100%', 'max-width': '35rem' }">
     <div [formGroup]="fg!">
