@@ -90,7 +90,7 @@ export class SedeFacultadComponent implements OnInit {
     console.log("LA sede seleccionada es: ", event);
     
     if(event){
-      this.sedeSeleccionada = this.listSedes.find((sed)=> sed.idSede === event)!;
+      this.sedeSeleccionada = this.listSedes.find((sede)=> sede.idSede === event)!;
       this.listarFacultades();
     }else{
       this.sedeSeleccionada = undefined;

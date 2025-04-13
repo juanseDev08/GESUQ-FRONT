@@ -1,7 +1,9 @@
+import { ISemestre } from "./semestre";
+
 export interface IGrupo{
     idGrupo?:number;
     nombreGrupo?:string;
-    semestre?:string;
+    semestre?:ISemestre;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
     fechaModificacion?: Date; 
@@ -10,7 +12,7 @@ export interface IGrupo{
 export class Grupo implements IGrupo{
     idGrupo?:number;
     nombreGrupo?:string;
-    semestre?:string;
+    semestre?:ISemestre;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
     fechaModificacion?: Date; 

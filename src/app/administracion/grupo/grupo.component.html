@@ -36,21 +36,11 @@
                 <ng-template pTemplate="body" let-grupo>
                     <tr>
                         <td>{{ grupo.nombreGrupo }}</td>
-                        <td>{{ grupo.semestre }}</td>
+                        <td>{{ grupo.semestre?.noSemestre }}</td>
                         <td class="text-center">
-                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
-                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
-                                (onChange)="abrirModal($event.value, grupo)">
-                                <ng-template let-opcion pTemplate="item" class="no-pointer">
-                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
-                                        [ngClass]="{'no-pointer': opcion.disable}">
-                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
-                                            [disabled]="opcion.disable"
-                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
-                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
-                                    </div>
-                                </ng-template>
-                            </p-dropdown>
+                           
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                (click)="eliminarGrupo(grupo)" pTooltip="Eliminar"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -68,8 +58,8 @@
             </div>
 
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off" formControlName="nombreGrupo"
-                    pTooltip="Ingrese el nombre del espacio" />
+                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off"
+                    formControlName="nombreGrupo" pTooltip="Ingrese el nombre del espacio" />
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('nombreGrupo')?.errors?.['required'] && (fg.get('nombreGrupo')?.dirty || fg.get('nombreGrupo')?.touched)">El
@@ -82,14 +72,13 @@
                 <label for="semestre" class="font-semibold w-6rem">Semestre:<span class="text-danger">*</span></label>
             </div>
 
-            <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="semestre" autocomplete="off"
-                    formControlName="semestre" pTooltip="Ingrese el semestre del grupo" />
-                <br />
-                <small class="p-error"
-                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El semestre
-                     es obligatorio</small>
-            </div>
+
+
+            <p-dropdown id="semestre" name="semestre" optionLabel="noSemestre" [options]="listSemestres"
+                (onChange)="SemestreSelecconado($event.value)" formControlName="semestre" optionValue="idSemestre"
+                appendTo="body" placeholder="Seleccione" class="flex-grow-1 truncate-text col-6"
+                [style]="{widtf:'100%'}" [showClear]="true">
+            </p-dropdown>
         </div>
 
 
@@ -110,8 +99,8 @@
                 <label for="nombreGrupo" class="font-semibold w-6rem">Nombre:<span class="text-danger">*</span> </label>
             </div>
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off" formControlName="nombreGrupo"
-                    pTooltip="Ingrese el nombre del espacio" maxlength="51" />
+                <input pInputText class="flex-grow-1 w-full" id="nombreGrupo" autocomplete="off"
+                    formControlName="nombreGrupo" pTooltip="Ingrese el nombre del espacio" maxlength="51" />
                 <br />
                 <small class="p-error"
                     *ngIf="fg.get('nombreGrupo')?.errors?.['required'] && (fg.get('nombreGrupo')?.dirty || fg.get('nombreGrupo')?.touched)">El
@@ -123,12 +112,13 @@
                 </label>
             </div>
             <div class="col-8">
-                <input pInputText class="flex-grow-1 w-full" id="semestre" autocomplete="off"
-                    formControlName="semestre" pTooltip="Ingrese el semestre del grupo" maxlength="51" />
+                <input pInputText class="flex-grow-1 w-full" id="semestre" autocomplete="off" formControlName="semestre"
+                    pTooltip="Ingrese el semestre del grupo" maxlength="51" />
                 <br />
                 <small class="p-error"
-                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El semestre
-                     es obligatoria</small>
+                    *ngIf="fg.get('semestre')?.errors?.['required'] && (fg.get('semestre')?.dirty || fg.get('semestre')?.touched)">El
+                    semestre
+                    es obligatoria</small>
             </div>
 
 

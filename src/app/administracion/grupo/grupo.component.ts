@@ -9,6 +9,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GrupoService } from '../../services/grupo.service';
 import { UtilConstants } from '../../util/util-constants';
 import Swal from 'sweetalert2';
+import { Semestre } from '../../model/semestre';
+import { SemestreService } from '../../services/semestre.service';
 
 @Component({
   selector: 'app-grupo',
@@ -20,8 +22,13 @@ export class GrupoComponent implements OnInit {
 
 
   listGrupos: IGrupo[] = [];
+  listSemestres:Semestre[] = [];
   grupo?: IGrupo;
+  semestreSeleccionado?:Semestre;
   newGrupo: Grupo = new Grupo();
+
+  
+ 
 
   displayCrearGrupo: boolean = false;
   displayEditarGrupo: boolean = false;
@@ -33,7 +40,7 @@ export class GrupoComponent implements OnInit {
 
   mensaje = Utilities;
 
-  listaOpciones = [
+/*   listaOpciones = [
     {
       icono: 'pi pi-pencil',
       nombre: 'Editar',
@@ -43,7 +50,7 @@ export class GrupoComponent implements OnInit {
       icono: 'pi pi-trash',
       nombre: 'Eliminar',
     }
-  ];
+  ]; */
 
   fg = new FormGroup({
 
@@ -58,15 +65,38 @@ export class GrupoComponent implements OnInit {
 
   constructor(
     private GrupoService: GrupoService,
+    private semestreService:SemestreService,
     private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
     this.listarGrupos();
+    this.listarSemestres();
     this.noDocumento = window.sessionStorage.getItem(UtilConstants.NUM_IDENTIFICACION)!;
   }
 
+  
+  SemestreSelecconado(event:any){
+    console.log("LA sede seleccionada es: ", event);
+    
+    if(event){
+      this.semestreSeleccionado = this.listSemestres.find((semestre)=> semestre.idSemestre === event)!;
+      
+    }else{
+      this.semestreSeleccionado = undefined;
+    }
+  }
+
   //----- Metodos que permiten listar 
+
+  listarSemestres() {
+    this.semestreService.listarSemestre().subscribe({
+      next: (datasemestre) => {
+        this.listSemestres = datasemestre;
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
+  }
 
   listarGrupos(): void {
     this.listGrupos = [];
@@ -104,15 +134,17 @@ export class GrupoComponent implements OnInit {
       this.fg.reset();
       this.newGrupo = { ...grupo };
       this.fg?.get('nombreGrupo')?.setValue(grupo.nombreGrupo!);
-      this.fg?.get('semestre')?.setValue(grupo.semestre!);
+      this.fg?.get('semestre')?.setValue(grupo.semestre?.idSemestre?.toString()!);
       this.displayEditarGrupo = true;
   
     }
+  
 
     // -- Metodo de crear -- //
-  creargrupo() {
+  creargrupo() {   
     this.newGrupo.nombreGrupo = this.fg?.get('nombreGrupo')?.value!;
-    this.newGrupo.semestre= this.fg?.get('semestre')?.value!;
+    const semestreId = this.fg?.get('semestre')?.value!;
+    this.newGrupo.semestre = this.listSemestres.find(s => s.idSemestre === Number(semestreId))!;
     this.newGrupo.idUsuarioCreacion = this.noDocumento;
     if (this.fg.valid) {
       this.GrupoService.crearGrupo(this.newGrupo).subscribe({
@@ -143,7 +175,8 @@ export class GrupoComponent implements OnInit {
 
   editarGrupo(): void {
     this.newGrupo.nombreGrupo = this.fg?.get('nombreGrupo')?.value!;
-    this.newGrupo.semestre = this.fg?.get('semestre')?.value!;
+    const semestreId = this.fg?.get('semestre')?.value!;
+    this.newGrupo.semestre = this.listSemestres.find(s => s.idSemestre === Number(semestreId))!;
     this.newGrupo.idUsuarioModificacion = this.noDocumento;
     if (this.fg.valid) {
       this.GrupoService.actualizarGrupo(this.newGrupo).subscribe({
