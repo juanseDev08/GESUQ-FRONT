@@ -13,7 +13,8 @@ const routes: Routes = [{ path: 'inicio', loadChildren: () =>
   { path: 'sede-facultad', loadChildren: () => import('./sede-facultad/sede-facultad.module').then(m => m.SedeFacultadModule) },
   { path: 'semestre', loadChildren: () => import('./semestre/semestre.module').then(m => m.SemestreModule) },
   { path: 'espacio-semestre', loadChildren: () => import('./espacio-semestre/espacio-semestre.module').then(m => m.EspacioSemestreModule) },
-  { path: 'grupo', loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule) }
+  { path: 'grupo', loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule) },
+  { path: 'grupo-relacion', loadChildren: () => import('./grupo-relacion/grupo-relacion.module').then(m => m.GrupoRelacionModule) },
 ];
   
 
