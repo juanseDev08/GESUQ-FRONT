@@ -96,7 +96,7 @@ export class FacultadProgramaComponent implements OnInit {
     
       this.listarProgramas();
     }else{
-      this.facultadSeleccionada = undefined;
+      this.facultadSeleccionada = undefined
     }
   }
 

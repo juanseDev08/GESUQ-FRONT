@@ -77,7 +77,7 @@ export class GrupoComponent implements OnInit {
 
   
   SemestreSelecconado(event:any){
-    console.log("LA sede seleccionada es: ", event);
+    console.log("El semestre seleccionado es: ", event);
     
     if(event){
       this.semestreSeleccionado = this.listSemestres.find((semestre)=> semestre.idSemestre === event)!;
