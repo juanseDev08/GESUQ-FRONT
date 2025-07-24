@@ -24,7 +24,7 @@ export class GrupoRelacionService {
   public eliminarGrupoRelacion(Igruporelacion: number): Observable<IGrupoRelacion> {
     return this.http.delete(this.urlServicio + '/eliminarGrupoRelacion/' + Igruporelacion)
   }
-  public eliminarGrupoRelacionPorGrupo(Idgrupo: number): Observable<IGrupoRelacion> {
+/*   public eliminarGrupoRelacionPorGrupo(Idgrupo: number): Observable<IGrupoRelacion> {
     return this.http.delete(this.urlServicio + '/eliminarGrupoRelacionporGrupo/' + Idgrupo)
-  }
+  } */
 }

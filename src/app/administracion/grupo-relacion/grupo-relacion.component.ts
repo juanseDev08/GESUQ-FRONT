@@ -171,14 +171,16 @@ export class GrupoRelacionComponent implements OnInit {
       // -- Metodo de crear -- //
       creargrupoRelacion() {   
         
-        const grupoId = this.fg?.get('grupo')?.value!;
+        /* const grupoId = this.fg?.get('grupo')?.value!; */
         const sedeId = this.fg?.get('sede')?.value!;
         const espacioId = this.fg?.get('espacio')?.value!;
         const facultadId = this.fg?.get('facultad')?.value!;
        
-        this.newGrupoRelacion.grupo = this.listGrupos.find(g => g.idGrupo === Number(grupoId))!;
+        /* this.newGrupoRelacion.grupo = this.listGrupos.find(g => g.idGrupo === Number(grupoId))!; */
         this.newGrupoRelacion.sede=this.listSedes.find(s => s.idSede === Number(sedeId))!;
-        this.newGrupoRelacion.espacioAcademico=this.listEspacios.find(e => e.idEspacioAcademico === Number(espacioId))!;
+        if (this.newGrupoRelacion.espacioPrograma) {
+          this.newGrupoRelacion.espacioPrograma.espacioAcademico = this.listEspacios.find(e => e.idEspacioAcademico === Number(espacioId))!;
+        }
         this.newGrupoRelacion.facultad=this.listFacultades.find(f => f.idFacultad === Number(facultadId))!;
         this.newGrupoRelacion.idUsuarioCreacion = this.noDocumento;
         if (this.fg.valid) {

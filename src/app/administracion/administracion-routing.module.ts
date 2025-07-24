@@ -15,6 +15,8 @@ const routes: Routes = [{ path: 'inicio', loadChildren: () =>
   { path: 'espacio-semestre', loadChildren: () => import('./espacio-semestre/espacio-semestre.module').then(m => m.EspacioSemestreModule) },
   { path: 'grupo', loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule) },
   { path: 'grupo-relacion', loadChildren: () => import('./grupo-relacion/grupo-relacion.module').then(m => m.GrupoRelacionModule) },
+  { path: 'espacio-programa', loadChildren: () => import('./espacio-programa/espacio-programa.module').then(m => m.EspacioProgramaModule) },
+
 ];
   
 

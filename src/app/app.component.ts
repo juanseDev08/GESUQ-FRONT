@@ -8,7 +8,7 @@ import { UtilConstants } from './util/util-constants';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   title = 'gesuq';
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   items: any[] = [];
   autenticado = false;
 
-  nombreUsuario ?: string;
+  nombreUsuario?: string;
 
   toggleSidebar(): void {
     this.sidebarVisible = !this.sidebarVisible;
@@ -25,30 +25,27 @@ export class AppComponent implements OnInit {
     private usuarioService: UsuarioService,
     private router: Router,
     private storageService: StorageService
-  ){}
+  ) {}
 
   ngOnInit(): void {
     this.autenticado = this.storageService.autenticado();
-    if(this.autenticado){
+    if (this.autenticado) {
       this.buscarUsuarioPorUsername(this.storageService.getUserName());
       this.setupMenuItems();
     }
-
-    
   }
-  logout(): void {    
+  logout(): void {
     this.storageService.borrar();
     this.router.navigateByUrl('/login');
     this.autenticado = false;
   }
   setupMenuItems(): void {
-
     this.items = [
       {
         label: 'Inicio',
         routerLink: 'administracion/inicio',
       },
-      
+
       {
         label: 'Espacio academico',
         routerLink: 'administracion/espacio-academico',
@@ -64,17 +61,22 @@ export class AppComponent implements OnInit {
       {
         label: 'Usuario',
         routerLink: 'administracion/usuario',
-      } ,
+      },
       {
         label: 'Espacio Semestre',
         routerLink: 'administracion/espacio-semestre',
       },
       {
-        label:'Grupo Relacion',
-        routerLink:'administracion/grupo-relacion',
-      }    
-      
-      , {
+        label: 'Grupo Relacion',
+        routerLink: 'administracion/grupo-relacion',
+      },
+
+      {
+        label: 'Programas y Espacios',
+        routerLink: 'administracion/espacio-programa',
+      },
+
+      {
         label: 'Facultad',
         items: [
           {
@@ -93,7 +95,7 @@ export class AppComponent implements OnInit {
       },
       {
         label: 'Sede',
-        items:[
+        items: [
           {
             label: 'Sede',
             routerLink: 'administracion/sede',
@@ -101,20 +103,22 @@ export class AppComponent implements OnInit {
           {
             label: 'Sede y facultad',
             routerLink: 'administracion/sede-facultad',
-          }
+          },
         ],
-      }
+      },
     ];
-  };
+  }
 
-
-  buscarUsuarioPorUsername(username : string){
+  buscarUsuarioPorUsername(username: string) {
     this.usuarioService.buscarUsuarioPorUserName(username).subscribe({
-      next:(dataUsuario)=>{
-        window.sessionStorage.setItem(UtilConstants.NUM_IDENTIFICACION,dataUsuario.noDocumento!);
-        this.nombreUsuario =dataUsuario.nombres + ' '+ dataUsuario.apellidos;
-      }
-    })
+      next: (dataUsuario) => {
+        window.sessionStorage.setItem(
+          UtilConstants.NUM_IDENTIFICACION,
+          dataUsuario.noDocumento!
+        );
+        this.nombreUsuario = dataUsuario.nombres + ' ' + dataUsuario.apellidos;
+      },
+    });
   }
 
   toggleItem(item: any): void {

@@ -1,4 +1,5 @@
 import { EspacioAcademico } from "./espacio-academico";
+import { IEspacioPrograma } from "./espacio-programa";
 import { Facultad } from "./facultad-model";
 import { IGrupo } from "./grupo-model";
 import { Sede } from "./sede-model";
@@ -6,10 +7,11 @@ import { Sede } from "./sede-model";
 
 export interface IGrupoRelacion{
     idGrupoRelacion ?: number;
-    grupo?:IGrupo;
+    /* grupo?:IGrupo; */
     facultad?:Facultad;
     sede?:Sede;
-    espacioAcademico?:EspacioAcademico;
+    espacioPrograma?:IEspacioPrograma;
+    /* espacioAcademico?:EspacioAcademico; */
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
     fechaModificacion?: Date;
@@ -17,10 +19,11 @@ export interface IGrupoRelacion{
 
 export class GrupoRelacion implements IGrupoRelacion{
     idGrupoRelacion ?: number;
-    grupo?:IGrupo;
+    /* grupo?:IGrupo; */
     facultad?:Facultad;
     sede?:Sede;
-    espacioAcademico?:EspacioAcademico;
+    espacioPrograma?:IEspacioPrograma;
+    /* espacioAcademico?:EspacioAcademico; */
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
     fechaModificacion?: Date;
