@@ -1,0 +1,99 @@
+<p-toast />
+<div class="centered-title">
+    <h2>
+        <span style="color: rgb(50, 134, 57)">ESPACIO </span>
+        <span style="color: rgb(15, 15, 15)">PROGRAMA</span>
+    </h2>
+</div>
+<!--Tabla confiltro-->
+<p-card>
+    <div class="grid">
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
+                pTooltip="Abrir modal para crear un espacio" />
+        </div>
+        <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
+            <p-iconField iconPosition="right">
+                <p-inputIcon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Search" (input)="
+            tablaEspaciosProgramas.filterGlobal($any($event.target)!.value, 'contains')
+          " placeholder="Filtrar" [style]="{ width: '100%' }" />
+            </p-iconField>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-offset-1 col-10">
+            <p-table [value]="listaEspaciosProgramas" #tablaEspaciosProgramas [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true" [rows]="5" [globalFilterFields]="['programa.nombre', 'espacioAcademico.nombre']"
+                [(selection)]="espaciosSeleccionados" dataKey="idEspacioAcademico" [rowHover]="true"
+                [rowsPerPageOptions]="[5, 10]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="programa">Programa <p-sortIcon field="programa"></p-sortIcon></th>
+                        <th pSortableColumn="espacio">Espacio <p-sortIcon field="espacio"></p-sortIcon></th>
+                        <th>Acciones</th>
+                      
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-programa>
+                    <tr>
+                        <td>{{ programa.programa?.nombre}}</td>
+                        <td>{{ programa.espacioAcademico?.nombre }}</td>
+                        <td>
+                            &nbsp;
+                            <p-button (onClick)="eliminar(programa)" icon="pi pi-trash" styleClass="button-form"
+                              pTooltip="Abrir modal para editar la facultad seleccionado"></p-button>
+                          </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+<!-- CREAR Espacio Programa-->
+<p-dialog header="Espacio Programa" [closable]="false" [modal]="true" [(visible)]="displayCrearEspacioPrograma"
+    [style]="{ width: '90%', 'max-width': '70rem' }">
+    <div [formGroup]="fg!">
+        <div class="grid pb-3">
+            <div class="col-12 md:col-10 xl:col-12 flex justify-content-between">
+                <label for="programa" class="font-semibold  flex align-items-center col-2">Programa:<span
+                        class="text-danger ">*</span></label>
+                <p-dropdown id="programa" name="programa" optionLabel="nombre" [options]="listProgramas"
+                    (onChange)="programaSelect($event.value)" formControlName="programa" optionValue="idPrograma" appendTo="body" placeholder="Seleccione" class="flex-grow-1 truncate-text col-6"
+                    (onClear)="limpiarListaTabla()" pTooltip="Seleccione el programa que desea asociar los espacios." [showClear]="true"
+                    [style]="{ width: '100%' }"></p-dropdown>
+            </div>
+            <div  *ngIf="programaSeleccionados"  class="col-12 md:col-10 xl:col-12 flex justify-content-end gap-2">
+                <p-iconField iconPosition="right">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search" (input)=" tablaEspacios.filterGlobal($any($event.target)!.value, 'contains')
+              " placeholder="Filtrar" [style]="{ width: '98%' }" />
+                </p-iconField>
+            </div>
+            <div  class="col-12 md:col-10 xl:col-12 flex justify-content-between"  >
+                <p-table  [value]="listEspacios" #tablaEspacios class="md:col-12 xl:col-12"  *ngIf="programaSeleccionados"
+                    [(selection)]="espaciosSeleccionados" dataKey="idEspacioAcademico" [tableStyle]="{'min-width': '35rem'}"
+                    [paginator]="true" [rows]="5" [globalFilterFields]="['nombre']">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 4rem" pTooltip="Seleccionar todos los programas."><p-tableHeaderCheckbox /></th>
+                            <th>Nombre Espacio</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-espacio>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="espacio" />
+                            </td>
+                            <td>{{espacio.nombre}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()"  />
+        <p-button label="Crear" (click)="crearEspacioSolicitante()"  *ngIf="programaSeleccionados" />
+    </div>
+</p-dialog>

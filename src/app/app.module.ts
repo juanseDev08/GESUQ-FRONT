@@ -29,11 +29,13 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+   
   ],
   imports: [
     BrowserModule,

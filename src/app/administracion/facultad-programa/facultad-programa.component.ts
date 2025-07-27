@@ -143,7 +143,7 @@ export class FacultadProgramaComponent implements OnInit {
     } else {
       this.eliminarFacultadPrograma(this.programaSeleccionados!, this.facultadSeleccionada!);
     }
-
+    console.log('FACULTAD SELECCIONADA:', this.facultadSeleccionada);
   }
 
   eliminarFacultadPrograma(seleccionados: Programa[], facultSelect: Facultad) {
