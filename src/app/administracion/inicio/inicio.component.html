@@ -1,15 +1,70 @@
 <div class="grid">
   <div class="col-offset-2 col-8">
-    <p-dropdown [options]="listEspacioAcademico" [(ngModel)]="espacioAcademicoSeleccionado" optionLabel="nombre"
-      placeholder="Selecciona el aula" class=" flex-grow-1" [style]="{ width: '100%' }"
-      (onChange)="asignarEspacioAcademico($event.value)" showClear="true">
-    </p-dropdown>
-    <p-button icon="pi pi-calendar" label="Mis Reservas" class="col-12 flex justify-content-center align-items-center"
-      (click)="irAMisReservas()">
-    </p-button>
-    <div class="col-12">
-      <app-tabla [espacioAcademicoSeleccionado]="espacioAcademicoSeleccionado" [listaReservas]="listaReservas"
-        [disponibilidad]="disponibilidad" (agendarEvento)="listarReservas()"></app-tabla>
+    <div class="flex flex-row items-center gap-3 w-full flex-wrap">
+      <!-- Sede -->
+      <p-dropdown
+        [options]="listaSedes"
+        [(ngModel)]="selectedSede"
+        optionLabel="nombreSede"
+        placeholder="Selecciona la sede"
+        (onChange)="filtrarFacultadesPorSede()"
+        showClear="true"
+        styleClass="w-full"
+      ></p-dropdown>
+
+      <!-- Facultad -->
+      <p-dropdown
+        *ngIf="facultadesFiltradas.length > 0"
+        [options]="facultadesFiltradas"
+        [(ngModel)]="selectedFacultad"
+        optionLabel="nombreFacultad"
+        placeholder="Selecciona la facultad"
+        (onChange)="filtrarProgramasPorSedeYFacultad()"
+        showClear="true"
+        styleClass="w-full"
+      ></p-dropdown>
+
+      <!-- Programa -->
+      <p-dropdown
+        *ngIf="programasFiltrados.length > 0"
+        [options]="programasFiltrados"
+        [(ngModel)]="selectedPrograma"
+        optionLabel="nombre"
+        placeholder="Selecciona el programa"
+        (onChange)="filtrarEspacios()"
+        showClear="true"
+        styleClass="w-full"
+      ></p-dropdown>
+
+      <!-- Espacio Académico -->
+      <p-dropdown
+        *ngIf="espaciosFiltrados.length > 0"
+        [options]="espaciosFiltrados"
+        [(ngModel)]="selectedEspacio"
+        optionLabel="nombre"
+        placeholder="Selecciona el aula"
+        (onChange)="buscarGrupoRelacion()"
+        showClear="true"
+        styleClass="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Botón -->
+    <p-button
+      icon="pi pi-calendar"
+      label="Mis Reservas"
+      class="col-12 flex justify-content-center align-items-center mt-3"
+      (click)="irAMisReservas()"
+    ></p-button>
+
+    <!-- Tabla -->
+    <div class="col-12 mt-2">
+      <app-tabla
+        [grupoRelacionSeleccionado]="grupoRelacionSeleccionado"
+        [listaReservas]="listaReservas"
+        [disponibilidad]="disponibilidad"
+        (agendarEvento)="listarReservas()"
+      ></app-tabla>
     </div>
   </div>
 </div>

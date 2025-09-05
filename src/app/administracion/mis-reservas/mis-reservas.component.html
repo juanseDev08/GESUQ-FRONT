@@ -21,15 +21,30 @@
         <div class="col-offset-1 col-10">
             <p-table [value]="listaReservas" #tablaReservaEspacioLista [tableStyle]="{ 'min-width': '50rem' }"
                 [paginator]="true" [rows]="5"
-                [globalFilterFields]="['fechaReservaEspacio', 'espacioAcademico','horario','isOcupado']"
+                [globalFilterFields]="[
+                'fechaReservaEspacio', 
+                'grupoRelacion.espacioPrograma.espacioAcademico.nombre',
+                'grupoRelacion.sede.nombreSede','horario','isOcupado']"
                 [rowsPerPageOptions]="[5, 10]">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
+                        <th pSortableColumn="sede">Sede <p-sortIcon
+                                field="sede"></p-sortIcon></th>
+
+                        <th pSortableColumn="facultad">Facultad<p-sortIcon
+                                field="facultad"></p-sortIcon></th>
+
+                        <th pSortableColumn="programa">Programa <p-sortIcon
+                                field="programa"></p-sortIcon></th>
+
                         <th pSortableColumn="espacioAcademico">Espacio académico <p-sortIcon
                                 field="espacioAcademico"></p-sortIcon></th>
+
                         <th pSortableColumn="fechaReservaEspacio">Fecha de reserva <p-sortIcon
                                 field="fechaReservaEspacio"></p-sortIcon></th>
+
                         <th pSortableColumn="horario">Horario de reserva<p-sortIcon field="horario"></p-sortIcon></th>
+
                         <th pSortableColumn="isOcupado">Estado de la reserva<p-sortIcon field="isOcupado"></p-sortIcon>
                         </th>
                         <th>Acciones</th>
@@ -38,7 +53,10 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-reserva>
                     <tr>
-                        <td>{{ reserva.espacioAcademico.nombre }}</td>
+                        <td>{{ reserva.grupoRelacion.sede.nombreSede }}</td>
+                        <td>{{ reserva.grupoRelacion.facultad.nombreFacultad }}</td>
+                        <td>{{ reserva.grupoRelacion.espacioPrograma.programa.nombre }}</td>
+                        <td>{{ reserva.grupoRelacion.espacioPrograma.espacioAcademico.nombre }}</td>
                         <td>{{ reserva.fechaReservaEspacio }}</td>
                         <td>{{ reserva.horario }}</td>
                         <td>
