@@ -1,21 +1,30 @@
-import { Component, EventEmitter, Input, input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { EspacioAcademicoService } from '../../services/espacio-academico.service';
 import { ReservaEspacio } from '../../model/reserva-espacio';
 import { UsuarioService } from '../../services/usuario.service';
 import { ReservaEspacioService } from '../../services/reserva-espacio.service';
 import { StorageService } from '../../services/storage.service';
 import { Usuario } from '../../model/usuario-model';
+import { GrupoRelacionService } from '../../services/grupo-relacion.service';
 
 @Component({
   selector: 'app-tabla',
   templateUrl: './tabla.component.html',
-  styleUrl: './tabla.component.scss'
+  styleUrl: './tabla.component.scss',
 })
 export class TablaComponent implements OnInit {
-
-  @Input() espacioAcademicoSeleccionado!: any;
+  /*  @Input() espacioAcademicoSeleccionado!: any; */
+  @Input() grupoRelacionSeleccionado!: any;
   @Input() listaReservas!: ReservaEspacio[];
-  @Input()  disponibilidad: { [key: string]: { [key: string]: string } } = {};
+  @Input() disponibilidad: { [key: string]: { [key: string]: string } } = {};
   @Output() agendarEvento = new EventEmitter<void>();
 
   semanaActual!: Date;
@@ -25,6 +34,7 @@ export class TablaComponent implements OnInit {
   fechaSeleccionada!: string;
   intervaloHorario!: string;
   listEspacioAcademico!: any;
+  listGrupoRelacion!: any;
   newReservaEspacio!: ReservaEspacio;
   usuario?: Usuario;
 
@@ -38,14 +48,21 @@ export class TablaComponent implements OnInit {
     { id: 7, nombre: 'Aula Lengua Castellana' },
   ];
 
-
   listaTiempos = [
-    '8:00 AM - 10:00 AM',
-    '10:00 AM - 12:00 PM',
-    '12:00 PM - 2:00 PM',
-    '2:00 PM - 4:00 PM',
-    '4:00 PM - 6:00 PM',
-    '7:00 PM - 9:00 PM'
+    '8:00 AM - 9:00 AM',
+    '9:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '11:00 AM - 12:00 PM',
+    '12:00 PM - 1:00 PM',
+    '1:00 PM - 2:00 PM',
+    '2:00 PM - 3:00 PM',
+    '3:00 PM - 4:00 PM',
+    '4:00 PM - 5:00 PM',
+    '5:00 PM - 6:00 PM',
+    '6:00 PM - 7:00 PM',
+    '7:00 PM - 8:00 PM',
+    '8:00 PM - 9:00 PM',
+  
   ];
 
   /* disponibilidad: { [key: string]: { [key: string]: string } } = {
@@ -55,26 +72,21 @@ export class TablaComponent implements OnInit {
      '2025-03-22': { '7:00 PM - 9:00 PM': 'Disponible' },
      '2025-03-28': { '7:00 PM - 9:00 PM': 'Disponible' }
    };*/
- 
 
   ngOnInit() {
     this.semanaActual = this.obtenerDomingoActual();
     this.listarEspacioAcademico();
     this.buscarUsuarioPorUsername(this.storageService.getUserName());
     this.listarReservas();
-    
   }
 
-
-  constructor
-    (
-      private espacioAcademicoService: EspacioAcademicoService,
-      private usuarioService: UsuarioService,
-      private reservaEspacioService: ReservaEspacioService,
-      private storageService: StorageService
-    ) {
-
-  }
+  constructor(
+    /* private espacioAcademicoService: EspacioAcademicoService, */
+    private grupoRelacionService: GrupoRelacionService,
+    private usuarioService: UsuarioService,
+    private reservaEspacioService: ReservaEspacioService,
+    private storageService: StorageService
+  ) {}
 
   obtenerDomingoActual(): Date {
     const today = new Date();
@@ -87,10 +99,9 @@ export class TablaComponent implements OnInit {
   buscarUsuarioPorUsername(username: string) {
     this.usuarioService.buscarUsuarioPorUserName(username).subscribe({
       next: (dataUsuario) => {
-
         this.usuario = dataUsuario;
-      }
-    })
+      },
+    });
   }
   getCurrentWeek(): { date: Date; label: string }[] {
     return Array.from({ length: this.daysInWeek }, (_, i) => {
@@ -98,22 +109,25 @@ export class TablaComponent implements OnInit {
       date.setDate(this.semanaActual.getDate() + i);
       return {
         date,
-        label: date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })
+        label: date.toLocaleDateString('es-ES', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        }),
       };
     });
   }
 
-
   changeWeek(offset: number) {
-    this.semanaActual.setDate(this.semanaActual.getDate() + offset * this.daysInWeek);
+    this.semanaActual.setDate(
+      this.semanaActual.getDate() + offset * this.daysInWeek
+    );
   }
-
 
   obtenerDisponibilidad(date: Date, time: string): string {
     const dateKey = date.toISOString().split('T')[0];
     return this.disponibilidad[dateKey]?.[time] || '';
   }
-
 
   onCellClick(fecha: Date, time: string) {
     if (this.obtenerDisponibilidad(fecha, time) === 'Ocupado') return;
@@ -124,15 +138,25 @@ export class TablaComponent implements OnInit {
   }
 
   isSelected(date: Date, time: string) {
-    return this.selectedSlot?.date === date.toISOString().split('T')[0] && this.selectedSlot?.time === time;
+    return (
+      this.selectedSlot?.date === date.toISOString().split('T')[0] &&
+      this.selectedSlot?.time === time
+    );
   }
 
-
-  listarEspacioAcademico(): void {
+  /*   listarEspacioAcademico(): void {
     this.espacioAcademicoService.listarEspaciosAcademicos().subscribe({
       next: (dataespacioacademico) => {
         this.listEspacioAcademico = dataespacioacademico;
+      },
+      error: (dataerror) => console.log(dataerror),
+    });
+  } */
 
+  listarEspacioAcademico(): void {
+    this.grupoRelacionService.listarGrupoRelacion().subscribe({
+      next: (dataGrupoRelacion) => {
+        this.listGrupoRelacion = dataGrupoRelacion;
       },
       error: (dataerror) => console.log(dataerror),
     });
@@ -141,7 +165,7 @@ export class TablaComponent implements OnInit {
   listarReservas(): void {
     this.reservaEspacioService.listarReservas().subscribe({
       next: (datareserva) => {
-        this.listaReservas = datareserva;  
+        this.listaReservas = datareserva;
       },
       error: (dataerror) => console.log(dataerror),
     });
@@ -149,14 +173,15 @@ export class TablaComponent implements OnInit {
 
   agendar() {
     const newEspacio = new ReservaEspacio();
-    newEspacio.espacioAcademico = this.espacioAcademicoSeleccionado;
+    /* newEspacio.espacioAcademico = this.espacioAcademicoSeleccionado; */
+    newEspacio.grupoRelacion = this.grupoRelacionSeleccionado;
     newEspacio.fechaReservaEspacio = new Date(this.fechaSeleccionada);
     newEspacio.horario = this.intervaloHorario;
     newEspacio.ocupado = true;
     newEspacio.usuario = this.usuario;
     newEspacio.idUsuarioCreacion = this.usuario?.noDocumento!;
 
-
+    console.log('Reserva que se va a enviar:', newEspacio);
     this.reservaEspacioService.crearReserva(newEspacio).subscribe({
       next: (data) => {
         this.display = false;
@@ -165,7 +190,5 @@ export class TablaComponent implements OnInit {
       },
       error: (dataerror) => console.log(dataerror),
     });
-
-
   }
 }

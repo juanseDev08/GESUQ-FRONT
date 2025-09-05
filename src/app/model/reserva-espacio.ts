@@ -1,4 +1,5 @@
 import { EspacioAcademico } from "./espacio-academico";
+import { GrupoRelacion } from "./grupo-relacion";
 import { Usuario } from "./usuario-model";
 
 export interface IReservaEspacio{
@@ -6,7 +7,7 @@ export interface IReservaEspacio{
     ocupado ?: boolean;
     fechaReservaEspacio ?: Date;
     horario ?: string;
-    espacioAcademico ?: EspacioAcademico;
+    grupoRelacion?:GrupoRelacion
     usuario ?: Usuario;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
@@ -18,7 +19,7 @@ export class ReservaEspacio implements IReservaEspacio{
     ocupado ?: boolean;
     fechaReservaEspacio ?: Date;
     horario ?: string;
-    espacioAcademico ?: EspacioAcademico;
+    grupoRelacion?:GrupoRelacion
     usuario ?: Usuario;
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;

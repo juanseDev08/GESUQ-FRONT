@@ -6,12 +6,10 @@ import { Sede } from "./sede-model";
 
 
 export interface IGrupoRelacion{
-    idGrupoRelacion ?: number;
-    /* grupo?:IGrupo; */
+    idGrupoRelacion ?: number; 
     facultad?:Facultad;
     sede?:Sede;
-    espacioPrograma?:IEspacioPrograma;
-    /* espacioAcademico?:EspacioAcademico; */
+    espacioPrograma?:IEspacioPrograma; 
     idUsuarioCreacion?: string;
     idUsuarioModificacion?: string;
     fechaModificacion?: Date;
