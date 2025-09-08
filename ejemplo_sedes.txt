@@ -1,0 +1,7 @@
+Sede Principal|Armenia, Quindío
+Sede Norte|Quimbaya, Quindío
+Sede Sur|Calarcá, Quindío
+Sede Occidente|Circasia, Quindío
+Sede Oriente|La Tebaida, Quindío
+Sede Tecnológica|Montenegro, Quindío
+

@@ -28,4 +28,8 @@ export class ProgramaService {
   public eliminarPrograma(Iprograma: number): Observable<IPrograma>{
     return this.http.delete(this.urlServicio+'/eliminarPrograma/'+Iprograma);
   }
+
+  public crearProgramasMasivo(programas: any[]): Observable<IPrograma[]>{
+    return this.http.post<IPrograma[]>(this.urlServicio+'/crearProgramasMasivo', programas);
+  }
 }

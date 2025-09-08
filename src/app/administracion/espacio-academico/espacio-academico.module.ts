@@ -16,6 +16,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { FileUploadModule } from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
     InputIconModule,
     InputTextModule,
     CardModule,
-    InputNumberModule
+    InputNumberModule,
+    FileUploadModule,
+    DropdownModule
   ]
 })
 export class EspacioAcademicoModule { }

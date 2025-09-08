@@ -21,11 +21,17 @@ export class SedeComponent implements OnInit {
 
   displayCrearSede: boolean = false;
   displayEditarSede: boolean = false;
+  displayCargarArchivo: boolean = false;
 
   filteredOptions?: any[];
   selectedOption: any = null;
 
   noDocumento?: string;
+
+  // Variables para carga de archivo
+  archivoSeleccionado?: File;
+  previewSedes: any[] = [];
+  cargandoArchivo: boolean = false;
 
   mensaje = Utilities;
 
@@ -94,6 +100,12 @@ export class SedeComponent implements OnInit {
     this.fg.reset();
     this.newSede = new Sede();
     this.displayCrearSede = true;
+  }
+
+  CargarArchivo(){
+    this.displayCargarArchivo = true;
+    this.archivoSeleccionado = undefined;
+    this.previewSedes = [];
   }
 
   abrirEditarModal(sede: Sede) {
@@ -195,7 +207,105 @@ export class SedeComponent implements OnInit {
 
   cerrarEditarModal(): void {
     this.displayEditarSede = false;
+  }
 
+  cerrarCargarArchivoModal(): void {
+    this.displayCargarArchivo = false;
+    this.archivoSeleccionado = undefined;
+    this.previewSedes = [];
+  }
+
+  onFileSelect(event: any): void {
+    const file = event.files[0];
+    if (file && file.type === 'text/plain') {
+      this.archivoSeleccionado = file;
+      this.procesarArchivoParaPreview();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ERROR',
+        detail: 'Por favor seleccione un archivo de texto (.txt) válido'
+      });
+    }
+  }
+
+  procesarArchivoParaPreview(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      this.previewSedes = this.parsearContenidoArchivo(content);
+      
+      if (this.previewSedes.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'ADVERTENCIA',
+          detail: 'No se encontraron sedes válidas en el archivo'
+        });
+      }
+    };
+    reader.readAsText(this.archivoSeleccionado);
+  }
+
+  parsearContenidoArchivo(content: string): any[] {
+    const lineas = content.split('\n').filter(linea => linea.trim() !== '');
+    const sedes: any[] = [];
+
+    lineas.forEach((linea, index) => {
+      const partes = linea.split(',');
+      if (partes.length === 2) {
+        const nombre = partes[0].trim();
+        const ubicacion = partes[1].trim();
+        
+        if (nombre && ubicacion) {
+          sedes.push({
+            nombre: nombre,
+            ubicacion: ubicacion,
+            linea: index + 1
+          });
+        }
+      }
+    });
+
+    return sedes;
+  }
+
+  procesarArchivo(): void {
+    if (!this.archivoSeleccionado || this.previewSedes.length === 0) {
+      return;
+    }
+
+    this.cargandoArchivo = true;
+    
+    // Convertir previewSedes a formato de Sede
+    const sedesParaCrear = this.previewSedes.map(sede => ({
+      nombreSede: sede.nombre,
+      ubicacion: sede.ubicacion,
+      idUsuarioCreacion: this.noDocumento
+    }));
+
+    this.sedeService.crearSedesMasivo(sedesParaCrear).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'ÉXITO',
+          detail: `Se cargaron ${response.length} sedes correctamente`
+        });
+        this.listarSedes();
+        this.cerrarCargarArchivoModal();
+        this.cargandoArchivo = false;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ERROR',
+          detail: 'Error al cargar las sedes. Verifique el formato del archivo.'
+        });
+        this.cargandoArchivo = false;
+        console.error('Error al cargar sedes:', error);
+      }
+    });
   }
 
 

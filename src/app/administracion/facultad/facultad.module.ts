@@ -15,7 +15,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
-
+import { FileUploadModule } from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -37,7 +38,9 @@ import { CardModule } from 'primeng/card';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    FileUploadModule,
+    DropdownModule
   ]
 })
 export class FacultadModule { }

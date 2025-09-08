@@ -21,11 +21,17 @@ export class ProgramaComponent implements OnInit {
 
   displayCrearPrograma: boolean = false;
   displayEditarPrograma: boolean = false;
+  displayCargarArchivo: boolean = false;
 
   filteredOptions?: any[];
   selectedOption: any = null;
 
-  noDocumento?:string;
+  noDocumento?: string;
+
+  // Variables para carga de archivo
+  archivoSeleccionado?: File;
+  previewProgramas: any[] = [];
+  cargandoArchivo: boolean = false;
   
   mensaje = Utilities;
 
@@ -95,6 +101,12 @@ export class ProgramaComponent implements OnInit {
     this.fg.reset();
     this.newPrograma= new Programa();
     this.displayCrearPrograma = true;
+  }
+
+  CargarArchivo(){
+    this.displayCargarArchivo = true;
+    this.archivoSeleccionado = undefined;
+    this.previewProgramas = [];
   }
   
   abrirEditarModal(programa : Programa){
@@ -193,6 +205,105 @@ export class ProgramaComponent implements OnInit {
 
   cerrarEditarModal(): void {
     this.displayEditarPrograma = false;
+  }
+
+  cerrarCargarArchivoModal(): void {
+    this.displayCargarArchivo = false;
+    this.archivoSeleccionado = undefined;
+    this.previewProgramas = [];
+  }
+
+  onFileSelect(event: any): void {
+    const file = event.files[0];
+    if (file && file.type === 'text/plain') {
+      this.archivoSeleccionado = file;
+      this.procesarArchivoParaPreview();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ERROR',
+        detail: 'Por favor seleccione un archivo de texto (.txt) válido'
+      });
+    }
+  }
+
+  procesarArchivoParaPreview(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      this.previewProgramas = this.parsearContenidoArchivo(content);
+      
+      if (this.previewProgramas.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'ADVERTENCIA',
+          detail: 'No se encontraron programas válidos en el archivo'
+        });
+      }
+    };
+    reader.readAsText(this.archivoSeleccionado);
+  }
+
+  parsearContenidoArchivo(content: string): any[] {
+    const lineas = content.split('\n').filter(linea => linea.trim() !== '');
+    const programas: any[] = [];
+
+    lineas.forEach((linea, index) => {
+      const partes = linea.split(',');
+      if (partes.length === 2) {
+        const codPrograma = partes[0].trim();
+        const nombre = partes[1].trim();
+        
+        if (codPrograma && nombre) {
+          programas.push({
+            codPrograma: codPrograma,
+            nombre: nombre,
+            linea: index + 1
+          });
+        }
+      }
+    });
+
+    return programas;
+  }
+
+  procesarArchivo(): void {
+    if (!this.archivoSeleccionado || this.previewProgramas.length === 0) {
+      return;
+    }
+
+    this.cargandoArchivo = true;
+    
+    // Convertir previewProgramas a formato de Programa
+    const programasParaCrear = this.previewProgramas.map(programa => ({
+      codPrograma: programa.codPrograma,
+      nombre: programa.nombre,
+      idUsuarioCreacion: this.noDocumento
+    }));
+
+    this.programaService.crearProgramasMasivo(programasParaCrear).subscribe({
+      next: (response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'ÉXITO',
+          detail: `Se cargaron ${response.length} programas correctamente`
+        });
+        this.listarProgramas();
+        this.cerrarCargarArchivoModal();
+        this.cargandoArchivo = false;
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ERROR',
+          detail: 'Error al cargar los programas. Verifique el formato del archivo.'
+        });
+        this.cargandoArchivo = false;
+        console.error('Error al cargar programas:', error);
+      }
+    });
   }
 
 }

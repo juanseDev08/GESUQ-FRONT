@@ -12,6 +12,10 @@
             <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
                 pTooltip="Abrir modal para crear un espacio académico" />
         </div>
+         <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Cargar Archivo" icon="pi pi-plus" (click)="CargarArchivo()"
+                pTooltip="Abrir modal para cargar espacios académicos desde archivo" />
+        </div>
         <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
             <p-iconField iconPosition="right">
                 <p-inputIcon styleClass="pi pi-search" />
@@ -37,11 +41,20 @@
                     <tr>
                         <td>{{ espacioAcademico.nombre }}</td>
                         <td>{{ espacioAcademico.descripcion }}</td>
-                        <td>
-                            &nbsp;
-                            <p-button (onClick)="abrirEditarModal(espacioAcademico)" icon="pi pi-pencil"
-                                styleClass="button-form"
-                                pTooltip="Abrir modal para editar el espacio académico seleccionado"></p-button>
+                        <td class="text-center">
+                            <p-dropdown [options]="listaOpciones" class="no-pointer" optionLabel="nombre"
+                                placeholder="Opciones" appendTo="body" [(ngModel)]="selectedOption"
+                                (onChange)="abrirModal($event.value, espacioAcademico)">
+                                <ng-template let-opcion pTemplate="item" class="no-pointer">
+                                    <div class="flex align-items-center gap-2" pTooltip="{{opcion.tooltip}}"
+                                        [ngClass]="{'no-pointer': opcion.disable}">
+                                        <p-button icon="{{ opcion.icono }}" styleClass="button-form-tabla"
+                                            [disabled]="opcion.disable"
+                                            [ngClass]="{'no-pointer': opcion.disable}"></p-button>
+                                        <div [ngClass]="{'disabled': opcion.disable}"> {{ opcion.nombre }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </td>
                     </tr>
                 </ng-template>
@@ -120,5 +133,68 @@
             <p-button label="Cancelar" severity="secondary" (click)="cerrarEditarModal()" />
             <p-button label="Editar" (click)="editarEspacioAcademico()" />
         </div>
+    </div>
+</p-dialog>
+
+<!-- Modal para cargar archivo -->
+<p-dialog header="Cargar Espacios Académicos desde Archivo" [closable]="false" [modal]="true" [(visible)]="displayCargarArchivo"
+    [style]="{ width: '100%', 'max-width': '30rem' }">
+    <div class="grid pb-3">
+        <div class="col-12">
+            <p class="text-sm text-600 mb-3">
+                Seleccione un archivo de texto plano (.txt) con el siguiente formato:<br>
+                <strong>Formato:</strong> Nombre,Descripción<br>
+                <strong>Ejemplo:</strong><br>
+                Aula 101,Salón de clases con capacidad para 30 estudiantes<br>
+                Laboratorio de Química,Laboratorio equipado para prácticas de química<br>
+                Biblioteca Central,Espacio de estudio y consulta bibliográfica
+            </p>
+        </div>
+        <div class="col-12">
+            <p-fileUpload 
+                mode="basic" 
+                name="archivoEspaciosAcademicos" 
+                accept=".txt" 
+                [maxFileSize]="1000000"
+                [auto]="false"
+                chooseLabel="Seleccionar Archivo"
+                (onSelect)="onFileSelect($event)"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                styleClass="w-full">
+            </p-fileUpload>
+        </div>
+        <div class="col-12" *ngIf="archivoSeleccionado">
+            <p class="text-sm">
+                <strong>Archivo seleccionado:</strong> {{ archivoSeleccionado.name }}
+            </p>
+        </div>
+        <div class="col-12" *ngIf="previewEspaciosAcademicos.length > 0">
+            <p class="text-sm font-semibold mb-2">Vista previa de espacios académicos a cargar:</p>
+            <div class="max-h-20rem overflow-auto">
+                <p-table [value]="previewEspaciosAcademicos" [tableStyle]="{ 'min-width': '20rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-espacio>
+                        <tr>
+                            <td>{{ espacio.nombre }}</td>
+                            <td>{{ espacio.descripcion }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="cerrarCargarArchivoModal()" />
+        <p-button 
+            label="Cargar Espacios" 
+            [disabled]="!archivoSeleccionado || previewEspaciosAcademicos.length === 0"
+            [loading]="cargandoArchivo"
+            (click)="procesarArchivo()" />
     </div>
 </p-dialog>

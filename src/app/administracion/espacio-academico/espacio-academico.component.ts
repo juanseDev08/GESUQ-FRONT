@@ -5,6 +5,7 @@ import { EspacioAcademico, IEspacioAcademico } from '../../model/espacio-academi
 import { Utilities } from '../../util/utilities';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilConstants } from '../../util/util-constants';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-espacio-academico',
@@ -19,10 +20,30 @@ export class EspacioAcademicoComponent implements OnInit {
 
   displayCrearEspacioAcademico: boolean = false;
   displayEditarEspacioAcademico: boolean = false;
+  displayCargarArchivo: boolean = false;
+
+  filteredOptions?: any[];
+  selectedOption: any = null;
 
   noDocumento?: string;
 
+  // Variables para carga de archivo
+  archivoSeleccionado?: File;
+  previewEspaciosAcademicos: any[] = [];
+  cargandoArchivo: boolean = false;
+
   mensaje = Utilities;
+
+  listaOpciones = [
+    {
+      icono: 'pi pi-pencil',
+      nombre: 'Editar',
+    },
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   fg = new FormGroup({
     nombre: new FormControl('', [
@@ -51,14 +72,36 @@ export class EspacioAcademicoComponent implements OnInit {
       next: (dataespacioacademico) => {
         this.listEspacioAcademico = dataespacioacademico;
       },
-      error: (dataerror) => console.log(dataerror),
+      error: (dataerror) => console.error('Error al listar espacios académicos:', dataerror),
     });
+  }
+
+  abrirModal(opcion: any, espacioAcademico: IEspacioAcademico): void {
+    switch (opcion.nombre) {
+      case 'Editar':
+        this.abrirEditarModal(espacioAcademico);
+        break;
+      case 'Eliminar':
+        this.eliminar(espacioAcademico);
+        break;
+      default:
+        break;
+    }
+    setTimeout(() => {
+      this.selectedOption = null;
+    }, 0);
   }
 
 abrirCrearModal(){
   this.fg.reset();
   this.newEspacioAcademico= new EspacioAcademico();
   this.displayCrearEspacioAcademico = true;
+}
+
+CargarArchivo(){
+  this.displayCargarArchivo = true;
+  this.archivoSeleccionado = undefined;
+  this.previewEspaciosAcademicos = [];
 }
 
 abrirEditarModal(espacioAcademico : EspacioAcademico){
@@ -138,6 +181,137 @@ cerrarCrearModal(): void {
 
 cerrarEditarModal(): void {
   this.displayEditarEspacioAcademico = false;
+}
+
+cerrarCargarArchivoModal(): void {
+  this.displayCargarArchivo = false;
+  this.archivoSeleccionado = undefined;
+  this.previewEspaciosAcademicos = [];
+}
+
+eliminar(espacioAcademico: IEspacioAcademico): void {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción eliminará permanentemente este espacio académico. ¿Deseas continuar?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#26670f",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar"
+  }).then((result) => {
+    if(result.isConfirmed){
+      this.espacioAcademicoService.eliminarEspacioAcademico(espacioAcademico.idEspacioAcademico!).subscribe({
+        next:()=>{
+          Swal.fire({
+            title: "¡Eliminación exitosa!",
+            text: "El espacio académico ha sido eliminado correctamente.",
+            icon: "success"
+          });
+          this.listarEspacioAcademico();
+        },
+        error: (error) => {
+          Swal.fire({
+            title: "Error",
+            text: "No se pudo eliminar el espacio académico.",
+            icon: "error"
+          });
+        }
+      });
+    }
+  });
+}
+
+onFileSelect(event: any): void {
+  const file = event.files[0];
+  if (file && file.type === 'text/plain') {
+    this.archivoSeleccionado = file;
+    this.procesarArchivoParaPreview();
+  } else {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'ERROR',
+      detail: 'Por favor seleccione un archivo de texto (.txt) válido'
+    });
+  }
+}
+
+procesarArchivoParaPreview(): void {
+  if (!this.archivoSeleccionado) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target?.result as string;
+    this.previewEspaciosAcademicos = this.parsearContenidoArchivo(content);
+    
+    if (this.previewEspaciosAcademicos.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'ADVERTENCIA',
+        detail: 'No se encontraron espacios académicos válidos en el archivo'
+      });
+    }
+  };
+  reader.readAsText(this.archivoSeleccionado);
+}
+
+parsearContenidoArchivo(content: string): any[] {
+  const lineas = content.split('\n').filter(linea => linea.trim() !== '');
+  const espaciosAcademicos: any[] = [];
+
+  lineas.forEach((linea, index) => {
+    const partes = linea.split(',');
+    if (partes.length === 2) {
+      const nombre = partes[0].trim();
+      const descripcion = partes[1].trim();
+      
+      if (nombre && descripcion) {
+        espaciosAcademicos.push({
+          nombre: nombre,
+          descripcion: descripcion,
+          linea: index + 1
+        });
+      }
+    }
+  });
+
+  return espaciosAcademicos;
+}
+
+procesarArchivo(): void {
+  if (!this.archivoSeleccionado || this.previewEspaciosAcademicos.length === 0) {
+    return;
+  }
+
+  this.cargandoArchivo = true;
+  
+  // Convertir previewEspaciosAcademicos a formato de EspacioAcademico
+  const espaciosAcademicosParaCrear = this.previewEspaciosAcademicos.map(item => ({
+    nombre: item.nombre,
+    descripcion: item.descripcion,
+    idUsuarioCreacion: this.noDocumento
+  }));
+
+  this.espacioAcademicoService.crearEspaciosAcademicosMasivo(espaciosAcademicosParaCrear).subscribe({
+    next: (response: any) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'ÉXITO',
+        detail: `Se cargaron ${response.length} espacios académicos correctamente`
+      });
+      this.listarEspacioAcademico();
+      this.cerrarCargarArchivoModal();
+      this.cargandoArchivo = false;
+    },
+    error: (error: any) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ERROR',
+        detail: 'Error al cargar los espacios académicos. Verifique el formato del archivo.'
+      });
+      this.cargandoArchivo = false;
+      console.error('Error al cargar espacios académicos:', error);
+    }
+  });
 }
 
 }

@@ -17,7 +17,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { DropdownModule } from 'primeng/dropdown';
     InputIconModule,
     InputTextModule,
     CardModule,
-    DropdownModule
+    DropdownModule,
+    FileUploadModule
   ]
 })
 export class FacultadProgramaModule { }
