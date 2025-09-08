@@ -48,7 +48,7 @@
             </ul>
           </div>
         </p-sidebar>
-        <p-button (onClick)="toggleSidebar()" icon="pi pi-bars"></p-button>
+        <p-button *ngIf="esAdmin()" (click)="toggleSidebar()" icon="pi pi-bars"></p-button>
       </div>
     </div>
 
