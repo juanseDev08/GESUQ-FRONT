@@ -29,5 +29,9 @@ export class FacultadProgramaService {
   public eliminarFacultadProgramaporid(ICodPrograma : number):Observable<IFacultadPrograma>{
     return this.http.delete(this.urlservicio+'/eliminarFacultadProgramaporid/'+ ICodPrograma);
   }
+
+  public crearFacultadProgramasMasivo(facultadProgramas: any[]): Observable<IFacultadPrograma[]>{
+    return this.http.post<IFacultadPrograma[]>(this.urlservicio+'/crearFacultadProgramasMasivo', facultadProgramas);
+  }
   
 }

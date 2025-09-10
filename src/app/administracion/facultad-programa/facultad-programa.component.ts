@@ -31,9 +31,24 @@ export class FacultadProgramaComponent implements OnInit {
   programaSeleccionados?: Programa[] = [];
 
   displayCrearFacultadPrograma: boolean = false;
+  displayCargarArchivo: boolean = false;
 
+  filteredOptions?: any[];
+  selectedOption: any = null;
 
   noDocumento?: string;
+
+  // Variables para carga de archivo
+  archivoSeleccionado?: File;
+  previewFacultadProgramas: any[] = [];
+  cargandoArchivo: boolean = false;
+
+  listaOpciones = [
+    {
+      icono: 'pi pi-trash',
+      nombre: 'Eliminar',
+    }
+  ];
 
   fg = new FormGroup({
     facultad: new FormControl(0, [
@@ -85,8 +100,21 @@ export class FacultadProgramaComponent implements OnInit {
       next:(datafacultadprograma)=>{
           this.listaFacultadPrograma=datafacultadprograma;
       },
-      error: (dataerror) =>console.error(dataerror),
+      error: (dataerror) =>console.error('Error al listar facultad-programas:', dataerror),
     });
+  }
+
+  abrirModal(opcion: any, facultadPrograma: IFacultadPrograma): void {
+    switch (opcion.nombre) {
+      case 'Eliminar':
+        this.eliminar(facultadPrograma);
+        break;
+      default:
+        break;
+    }
+    setTimeout(() => {
+      this.selectedOption = null;
+    }, 0);
   }
 
   facultSeleccionada(event:any){
@@ -200,6 +228,12 @@ export class FacultadProgramaComponent implements OnInit {
     this.displayCrearFacultadPrograma = true;
   }
 
+  CargarArchivo(){
+    this.displayCargarArchivo = true;
+    this.archivoSeleccionado = undefined;
+    this.previewFacultadProgramas = [];
+  }
+
   limpiarListaTabla(): void {
     this.listProgramas = [];
     this.programaSeleccionados = [];
@@ -210,6 +244,110 @@ export class FacultadProgramaComponent implements OnInit {
     this.programaSeleccionados = [];
     this.facultadSeleccionada = undefined;
     this.displayCrearFacultadPrograma = false;
+  }
+
+  cerrarCargarArchivoModal(): void {
+    this.displayCargarArchivo = false;
+    this.archivoSeleccionado = undefined;
+    this.previewFacultadProgramas = [];
+  }
+
+  onFileSelect(event: any): void {
+    const file = event.files[0];
+    if (file && file.type === 'text/plain') {
+      this.archivoSeleccionado = file;
+      this.procesarArchivoParaPreview();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ERROR',
+        detail: 'Por favor seleccione un archivo de texto (.txt) válido'
+      });
+    }
+  }
+
+  procesarArchivoParaPreview(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      this.previewFacultadProgramas = this.parsearContenidoArchivo(content);
+      
+      if (this.previewFacultadProgramas.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'ADVERTENCIA',
+          detail: 'No se encontraron relaciones facultad-programa válidas en el archivo'
+        });
+      }
+    };
+    reader.readAsText(this.archivoSeleccionado);
+  }
+
+  parsearContenidoArchivo(content: string): any[] {
+    const lineas = content.split('\n').filter(linea => linea.trim() !== '');
+    const facultadProgramas: any[] = [];
+
+    lineas.forEach((linea, index) => {
+      const partes = linea.split(',');
+      if (partes.length === 2) {
+        const nombreFacultad = partes[0].trim();
+        const nombrePrograma = partes[1].trim();
+        
+        if (nombreFacultad && nombrePrograma) {
+          facultadProgramas.push({
+            nombreFacultad: nombreFacultad,
+            nombrePrograma: nombrePrograma,
+            linea: index + 1
+          });
+        }
+      }
+    });
+
+    return facultadProgramas;
+  }
+
+  procesarArchivo(): void {
+    if (!this.archivoSeleccionado || this.previewFacultadProgramas.length === 0) {
+      return;
+    }
+
+    this.cargandoArchivo = true;
+    
+    // Convertir previewFacultadProgramas a formato de FacultadPrograma
+    const facultadProgramasParaCrear = this.previewFacultadProgramas.map(item => {
+      const facultad = this.listFacultades.find(f => f.nombreFacultad === item.nombreFacultad);
+      const programa = this.listProgramas.find(p => p.nombre === item.nombrePrograma);
+      
+      return {
+        facultad: facultad,
+        programa: programa,
+        idUsuarioCreacion: this.noDocumento
+      };
+    }).filter(item => item.facultad && item.programa);
+
+    this.facultadProgramaService.crearFacultadProgramasMasivo(facultadProgramasParaCrear).subscribe({
+      next: (response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'ÉXITO',
+          detail: `Se cargaron ${response.length} relaciones facultad-programa correctamente`
+        });
+        this.listarFacultadPrograma();
+        this.cerrarCargarArchivoModal();
+        this.cargandoArchivo = false;
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ERROR',
+          detail: 'Error al cargar las relaciones facultad-programa. Verifique el formato del archivo.'
+        });
+        this.cargandoArchivo = false;
+        console.error('Error al cargar facultad-programas:', error);
+      }
+    });
   }
 
 }

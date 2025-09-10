@@ -29,4 +29,8 @@ export class SedeService {
     public eliminarSede(Isede:number):Observable<Isede>{
         return this.http.delete(this.urlServicio+'/eliminarSede/'+Isede);
     }
+
+    public crearSedesMasivo(sedes: Isede[]): Observable<Isede[]> {
+        return this.http.post<Isede[]>(this.urlServicio + '/crearSedesMasivo', sedes);
+    }
 }

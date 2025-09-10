@@ -27,4 +27,8 @@ export class EspacioAcademicoService {
   public eliminarEspacioAcademico(Iespacioacademico : number) :Observable<IEspacioAcademico>{
     return this.http.delete(this.urlServicio+'/eliminarEspacioAcademico/'+Iespacioacademico);
   }
+
+  public crearEspaciosAcademicosMasivo(espaciosAcademicos: any[]): Observable<IEspacioAcademico[]>{
+    return this.http.post<IEspacioAcademico[]>(this.urlServicio+'/crearEspaciosAcademicosMasivo', espaciosAcademicos);
+  }
 }

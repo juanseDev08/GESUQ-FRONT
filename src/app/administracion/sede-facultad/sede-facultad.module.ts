@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
-
+import { FileUploadModule } from 'primeng/fileupload';
 
 
 
@@ -44,7 +44,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
     InputTextModule,
     CardModule,
     DropdownModule,
-    MultiSelectModule
+    MultiSelectModule,
+    FileUploadModule
   ]
 })
 export class SedeFacultadModule { }
