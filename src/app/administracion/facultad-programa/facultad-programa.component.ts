@@ -81,18 +81,35 @@ export class FacultadProgramaComponent implements OnInit {
   }
 
   listarProgramas() {
+
+    if (!this.facultadSeleccionada) {
+      this.listProgramas = [];
+      this.programaSeleccionados = [];
+      return;
+    }
+
     this.programaService.listarProgramas().subscribe({
       next: (dataprograma) => {
-        this.listProgramas =  dataprograma.filter(
-          (programa) => !this.listaFacultadPrograma.some(
-            (facultadPrograma) => facultadPrograma.programa?.codPrograma === programa.codPrograma
-          )
-        );
-        this.marcarProgramasSeleccionados();
+        this.facultadProgramaService.listarFacultadProgramaPorIdFacultad(this.facultadSeleccionada!.idFacultad!).subscribe({
+          next: (facultadProgramasExistentes) => {
+            this.listProgramas = dataprograma.filter(
+              (programa) => !facultadProgramasExistentes.some(
+                (facultadPrograma) => facultadPrograma.programa?.codPrograma === programa.codPrograma
+              )
+            );
+            this.marcarProgramasSeleccionados();
+          },
+          error: (error) => {
+            console.log('Error al obtener programas de la facultad:', error);
+            this.listProgramas = dataprograma;
+            this.marcarProgramasSeleccionados();
+          }
+        });
       },
       error: (dataerror) => console.log(dataerror),
     });
   }
+
 
   listarFacultadPrograma(){
     this.listaFacultadPrograma =[]
@@ -121,17 +138,25 @@ export class FacultadProgramaComponent implements OnInit {
 
     if(event){
       this.facultadSeleccionada = this.listFacultades.find((facul) => facul.idFacultad === event)!;
-    
+   
       this.listarProgramas();
     }else{
       this.facultadSeleccionada = undefined
     }
   }
 
+  //MErodo que permite seleccionar todos los programas de la facultad, para no hacerlo uno a uno
   marcarProgramasSeleccionados() {
-    this.programaSeleccionados = this.listProgramas.filter((programa) =>
-      this.listaFacultadPrograma.some(facultadPrograma =>
-        facultadPrograma.programa!.codPrograma === programa.codPrograma));
+    if (this.facultadSeleccionada) {
+      this.programaSeleccionados = this.listaFacultadPrograma
+        .filter(facultadPrograma => 
+          facultadPrograma.facultad?.idFacultad === this.facultadSeleccionada?.idFacultad
+        )
+        .map(facultadPrograma => facultadPrograma.programa!)
+        .filter(programa => programa); 
+    } else {
+      this.programaSeleccionados = [];
+    }
   }
 
 

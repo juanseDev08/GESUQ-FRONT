@@ -131,10 +131,12 @@ export class GrupoRelacionComponent implements OnInit {
 
   listarEspaciosPrograma() {
     this.listEspaciosPrograma = [];
+    console.log("EN LISTAR PROGRAMAS");
+    
     this.espacioProgramaService.listarEspacioPrograma().subscribe({
       next: (data) => {
         this.listEspaciosPrograma = data;
-
+    
         // Extraer programas únicos
         this.listProgramas = Array.from(
           new Map(
@@ -153,11 +155,12 @@ export class GrupoRelacionComponent implements OnInit {
         ).filter((e): e is EspacioAcademico => e !== undefined);
 
        
-        console.log('Programas cargados:', this.listProgramas);
-        console.log('Espacios cargados:', this.listEspacios);
+        
       },
       error: (err) => console.error(err),
     });
+    console.log('Programas cargados:', this.listProgramas);
+        console.log('Espacios cargados:', this.listEspacios);
   }
 
   filtrarEspaciosPorPrograma(idPrograma: number) {

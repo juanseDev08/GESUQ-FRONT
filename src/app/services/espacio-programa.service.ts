@@ -23,4 +23,8 @@ export class EspacioProgramaService {
   public eliminarEspacioPrograma(idEspacioPrograma: number): Observable<IEspacioPrograma> {
     return this.http.delete(this.urlServicio + '/eliminarEspaProgramaporid/' + idEspacioPrograma);
   }
+
+  public crearEspacioProgramasMasivo(espacioProgramas: any[]): Observable<IEspacioPrograma[]> {
+    return this.http.post<IEspacioPrograma[]>(this.urlServicio + '/crearEspacioProgramasMasivo', espacioProgramas);
+  }
 }
