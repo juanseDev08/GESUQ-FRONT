@@ -12,6 +12,10 @@
             <p-button pRipple severity="success" label="Crear" icon="pi pi-plus" (click)="abrirCrearModal()"
                 pTooltip="Abrir modal para crear un espacio" />
         </div>
+        <div class="flex col-offset-1 sm:col-3 md:col-2 xl:col-1">
+            <p-button pRipple severity="success" label="Cargar Archivo" icon="pi pi-upload" (click)="CargarArchivo()"
+                pTooltip="Abrir modal para cargar relaciones espacio-programa desde archivo" />
+        </div>
         <div class="sm:col-offset-3 sm:col-4 md:col-offset-4 md:col-4 xl:col-offset-7 xl:col-2">
             <p-iconField iconPosition="right">
                 <p-inputIcon styleClass="pi pi-search" />
@@ -95,5 +99,68 @@
     <div class="flex justify-content-end gap-2">
         <p-button label="Cancelar" severity="secondary" (click)="cerrarCrearModal()"  />
         <p-button label="Crear" (click)="crearEspacioSolicitante()"  *ngIf="programaSeleccionados" />
+    </div>
+</p-dialog>
+
+<!-- Modal para cargar archivo -->
+<p-dialog header="Cargar Relaciones Espacio-Programa desde Archivo" [closable]="false" [modal]="true" [(visible)]="displayCargarArchivo"
+    [style]="{ width: '100%', 'max-width': '30rem' }">
+    <div class="grid pb-3">
+        <div class="col-12">
+            <p class="text-sm text-600 mb-3">
+                Seleccione un archivo de texto plano (.txt) con el siguiente formato:<br>
+                <strong>Formato:</strong> NombrePrograma,NombreEspacio<br>
+                <strong>Ejemplo:</strong><br>
+                Ingeniería de Sistemas,Programación I<br>
+                Ingeniería de Sistemas,Base de Datos<br>
+                Medicina,Anatomía Humana
+            </p>
+        </div>
+        <div class="col-12">
+            <p-fileUpload 
+                mode="basic" 
+                name="archivoEspacioProgramas" 
+                accept=".txt" 
+                [maxFileSize]="1000000"
+                [auto]="false"
+                chooseLabel="Seleccionar Archivo"
+                (onSelect)="onFileSelect($event)"
+                [showUploadButton]="false"
+                [showCancelButton]="false"
+                styleClass="w-full">
+            </p-fileUpload>
+        </div>
+        <div class="col-12" *ngIf="archivoSeleccionado">
+            <p class="text-sm">
+                <strong>Archivo seleccionado:</strong> {{ archivoSeleccionado.name }}
+            </p>
+        </div>
+        <div class="col-12" *ngIf="previewEspacioProgramas.length > 0">
+            <p class="text-sm font-semibold mb-2">Vista previa de relaciones a cargar:</p>
+            <div class="max-h-20rem overflow-auto">
+                <p-table [value]="previewEspacioProgramas" [tableStyle]="{ 'min-width': '20rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Programa</th>
+                            <th>Espacio</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-relacion>
+                        <tr>
+                            <td>{{ relacion.nombrePrograma }}</td>
+                            <td>{{ relacion.nombreEspacio }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="cerrarCargarArchivoModal()" />
+        <p-button 
+            label="Cargar Relaciones" 
+            [disabled]="!archivoSeleccionado || previewEspacioProgramas.length === 0"
+            [loading]="cargandoArchivo"
+            (click)="procesarArchivo()" />
     </div>
 </p-dialog>

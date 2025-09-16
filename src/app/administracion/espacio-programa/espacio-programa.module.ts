@@ -17,6 +17,7 @@ import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { EspacioProgramaComponent } from './espacio-programa.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [EspacioProgramaComponent],
@@ -37,7 +38,8 @@ import { EspacioProgramaComponent } from './espacio-programa.component';
      InputIconModule,
      InputTextModule,
      CardModule,
-     DropdownModule
+     DropdownModule,
+     FileUploadModule
   ],
 })
 export class EspacioProgramaModule {}
