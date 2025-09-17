@@ -24,6 +24,10 @@ export class GrupoRelacionService {
   public eliminarGrupoRelacion(Igruporelacion: number): Observable<IGrupoRelacion> {
     return this.http.delete(this.urlServicio + '/eliminarGrupoRelacion/' + Igruporelacion)
   }
+
+    public crearGrupoRelacionsMasivo(grupoRelacion: any[]): Observable<IGrupoRelacion[]>{
+      return this.http.post<IGrupoRelacion[]>(this.urlServicio+'/crearGrupoRelacionMasivo', grupoRelacion);
+    }
 /*   public eliminarGrupoRelacionPorGrupo(Idgrupo: number): Observable<IGrupoRelacion> {
     return this.http.delete(this.urlServicio + '/eliminarGrupoRelacionporGrupo/' + Idgrupo)
   } */
