@@ -31,9 +31,14 @@ export class AppComponent implements OnInit {
     this.autenticado = this.storageService.autenticado();
     if (this.autenticado) {
       this.buscarUsuarioPorUsername(this.storageService.getUserName());
-      this.setupMenuItems();
+      if (this.storageService.esAdmin()) {
+        this.setupMenuItems();
+      }
     }
   }
+  esAdmin(): boolean {
+  return this.storageService.esAdmin();
+}
   logout(): void {
     this.storageService.borrar();
     this.router.navigateByUrl('/login');
