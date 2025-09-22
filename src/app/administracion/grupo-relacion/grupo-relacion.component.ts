@@ -33,11 +33,19 @@ export class GrupoRelacionComponent implements OnInit {
   espaciosFiltrados: EspacioAcademico[] = [];
   grupoRelacion?: IGrupoRelacion;
 
+  displayCargarArchivo: boolean = false;
+  displayGrupoRelacion: boolean = false;
+
+  // Variables para carga de archivo
+  archivoSeleccionado?: File;
+  previewGrupoRelacion: any[] = [];
+  cargandoArchivo: boolean = false;
+
   newGrupoRelacion: GrupoRelacion = new GrupoRelacion();
 
   sedeSeleccionada?: Sede;
   facultadSeleccionada?: Facultad;
-/*   espacioAcademicoSeleccionado?: EspacioAcademico;
+  /*   espacioAcademicoSeleccionado?: EspacioAcademico;
   programaSeleccionado?: Programa; */
 
   displayCrearGrupo: boolean = false;
@@ -58,7 +66,7 @@ export class GrupoRelacionComponent implements OnInit {
   });
 
   constructor(
-    private grupoRelacionService: GrupoRelacionService,  
+    private grupoRelacionService: GrupoRelacionService,
     private sedeService: SedeService,
     private espacioProgramaService: EspacioProgramaService,
     private facultadService: FacultadService,
@@ -131,12 +139,12 @@ export class GrupoRelacionComponent implements OnInit {
 
   listarEspaciosPrograma() {
     this.listEspaciosPrograma = [];
-    console.log("EN LISTAR PROGRAMAS");
-    
+    console.log('EN LISTAR PROGRAMAS');
+
     this.espacioProgramaService.listarEspacioPrograma().subscribe({
       next: (data) => {
         this.listEspaciosPrograma = data;
-    
+
         // Extraer programas únicos
         this.listProgramas = Array.from(
           new Map(
@@ -153,14 +161,11 @@ export class GrupoRelacionComponent implements OnInit {
             ])
           ).values()
         ).filter((e): e is EspacioAcademico => e !== undefined);
-
-       
-        
       },
       error: (err) => console.error(err),
     });
     console.log('Programas cargados:', this.listProgramas);
-        console.log('Espacios cargados:', this.listEspacios);
+    console.log('Espacios cargados:', this.listEspacios);
   }
 
   filtrarEspaciosPorPrograma(idPrograma: number) {
@@ -176,11 +181,6 @@ export class GrupoRelacionComponent implements OnInit {
       );
     console.log('Espacios filtrados:', this.espaciosFiltrados);
   }
-  abrirCrearModal() {
-    this.fg.reset();
-    this.newGrupoRelacion = new GrupoRelacion();
-    this.displayCrearGrupo = true;
-  }
 
   // -- Metodo de crear -- //
   creargrupoRelacion() {
@@ -188,7 +188,6 @@ export class GrupoRelacionComponent implements OnInit {
     const facultadId = this.fg?.get('facultad')?.value!;
     const idPrograma = this.fg?.get('programa')?.value!;
     const idEspacio = this.fg?.get('espacio')?.value!;
-    
 
     this.newGrupoRelacion.sede = this.listSedes.find(
       (s) => s.idSede === Number(sedeId)
@@ -197,15 +196,13 @@ export class GrupoRelacionComponent implements OnInit {
       (f) => f.idFacultad === Number(facultadId)
     )!;
 
-    this.newGrupoRelacion.espacioPrograma=this.listEspaciosPrograma.find(
+    this.newGrupoRelacion.espacioPrograma = this.listEspaciosPrograma.find(
       (ep) =>
         ep.programa?.idPrograma === Number(idPrograma) &&
         ep.espacioAcademico?.idEspacioAcademico === Number(idEspacio)
     );
 
-
-      this.newGrupoRelacion.idUsuarioCreacion = this.noDocumento;  
-   
+    this.newGrupoRelacion.idUsuarioCreacion = this.noDocumento;
 
     if (this.fg.valid) {
       console.log('Objeto que se envía al backend:', this.newGrupoRelacion);
@@ -228,7 +225,7 @@ export class GrupoRelacionComponent implements OnInit {
               summary: 'ERROR',
               detail: 'El registro ingresado ya existe',
             });
-          }, 
+          },
         });
       this.displayCrearGrupo = false;
     } else {
@@ -262,6 +259,18 @@ export class GrupoRelacionComponent implements OnInit {
       }
     });
   }
+  //----abrir modales--//
+  abrirCrearModal() {
+    this.fg.reset();
+    this.newGrupoRelacion = new GrupoRelacion();
+    this.displayCrearGrupo = true;
+  }
+
+  CargarArchivo() {
+    this.displayCargarArchivo = true;
+    this.archivoSeleccionado = undefined;
+    this.previewGrupoRelacion = [];
+  }
 
   //----cerrar modales--//
   cerrarCrearModal(): void {
@@ -270,5 +279,152 @@ export class GrupoRelacionComponent implements OnInit {
 
   cerrarEditarModal(): void {
     this.displayEditarGrupo = false;
+  }
+  cerrarCargarArchivoModal(): void {
+    this.displayCargarArchivo = false;
+    this.archivoSeleccionado = undefined;
+    this.previewGrupoRelacion = [];
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.files[0];
+    if (file && file.type === 'text/plain') {
+      this.archivoSeleccionado = file;
+      this.procesarArchivoParaPreview();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ERROR',
+        detail: 'El archivo debe ser de tipo texto plano (.txt)',
+      });
+    }
+  }
+  // Metodo para procesar el archivo y generar la vista previa
+  procesarArchivoParaPreview(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      this.previewGrupoRelacion = this.parsearContenidoArchivo(content);
+
+      if (this.previewGrupoRelacion.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'ADVERTENCIA',
+          detail:
+            'No se encontraron relaciones grupoRelacion válidas en el archivo',
+        });
+      }
+    };
+    reader.readAsText(this.archivoSeleccionado);
+  }
+  // Método para parsear el contenido del archivo
+  parsearContenidoArchivo(content: string): any[] {
+    const lineas = content.split('\n').filter((linea) => linea.trim() !== '');
+    const grupoRelacion: any[] = [];
+
+    lineas.forEach((linea, index) => {
+      const partes = linea.split(',');
+      if (partes.length === 4) {
+        const nombreSede = partes[0].trim();
+        const nombreFacultad = partes[1].trim();
+        const nombrePrograma = partes[2].trim();
+        const nombreEspacio = partes[3].trim();
+
+        if (nombreFacultad && nombreSede && nombrePrograma && nombreEspacio) {
+          grupoRelacion.push({
+            nombreFacultad: nombreFacultad,
+            nombreSede: nombreSede,
+            nombrePrograma: nombrePrograma,
+            nombreEspacio: nombreEspacio,
+            linea: index + 1,
+          });
+        }
+      }
+    });
+
+    return grupoRelacion;
+  }
+  procesarArchivo(): void {
+    if (!this.archivoSeleccionado || this.previewGrupoRelacion.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'ADVERTENCIA',
+        detail: 'No hay registros válidos para procesar.',
+      });
+      return;
+    }
+
+    this.cargandoArchivo = true;
+
+    // Función para normalizar strings
+    const normalize = (str?: string) => str?.trim().toLowerCase();
+
+    // Convertir preview a formato de GrupoRelacion con objetos de la lista
+    const grupoRelacionParaCrear = this.previewGrupoRelacion
+      .map((item, index) => {
+        const sede = this.listSedes.find(
+          (s) => normalize(s.nombreSede) === normalize(item.nombreSede)
+        );
+        const facultad = this.listFacultades.find(
+          (f) => normalize(f.nombreFacultad) === normalize(item.nombreFacultad)
+        );
+        const espacioPrograma = this.listEspaciosPrograma.find(
+          (ep) =>
+            normalize(ep.espacioAcademico?.nombre) ===
+              normalize(item.nombreEspacio) &&
+            normalize(ep.programa?.nombre) === normalize(item.nombrePrograma)
+        );
+
+ 
+ 
+        return {
+          sede,
+          facultad,
+          espacioPrograma,
+          idUsuarioCreacion: this.noDocumento,
+        };
+      })
+      .filter((item) => item.sede && item.facultad && item.espacioPrograma);
+
+ 
+
+    if (grupoRelacionParaCrear.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'ADVERTENCIA',
+        detail:
+          'Ningún registro del archivo coincide con los datos existentes.',
+      });
+      this.cargandoArchivo = false;
+      return;
+    }
+
+    // Enviar al backend
+    this.grupoRelacionService
+      .crearGrupoRelacionsMasivo(grupoRelacionParaCrear)
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'ÉXITO',
+            detail: `Se cargaron ${response.length} relaciones correctamente.`,
+          });
+          this.listarGruposRelacion();
+          this.cerrarCargarArchivoModal();
+          this.cargandoArchivo = false;
+        },
+        error: (error: any) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'ERROR',
+            detail:
+              'Error al cargar las relaciones. Verifique el formato del archivo.',
+          });
+          console.error('Error al cargar relaciones:', error);
+          this.cargandoArchivo = false;
+        },
+      });
   }
 }
