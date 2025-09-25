@@ -153,13 +153,13 @@
                 Seleccione un archivo de texto plano (.txt) con el siguiente formato:<br>
                 <strong>Formato:</strong> Nombre,Descripción<br>
                 <strong>Ejemplo:</strong><br>
-                Aula 101,Salón de clases con capacidad para 30 estudiantes<br>
-                Laboratorio de Química,Laboratorio equipado para prácticas de química<br>
-                Biblioteca Central,Espacio de estudio y consulta bibliográfica
+                Programación,Programación inicial<br>
+                Matemáticas,Matemáticas basica <br>
+                Frances II,Segunda lengua en frances
             </p>
         </div>
         <div class="col-12">
-            <p-fileUpload mode="basic" name="archivoEspaciosAcademicos" accept=".txt" [maxFileSize]="1000000"
+            <p-fileUpload #uploader mode="basic" name="archivoEspaciosAcademicos" accept=".txt" [maxFileSize]="1000000"
                 [auto]="false" chooseLabel="Seleccionar Archivo" (onSelect)="onFileSelect($event)"
                 [showUploadButton]="false" [showCancelButton]="false" styleClass="w-full">
             </p-fileUpload>

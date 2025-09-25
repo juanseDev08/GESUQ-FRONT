@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { FileUpload } from 'primeng/fileupload';
 import { EspacioAcademico } from '../../model/espacio-academico';
 import { Programa } from '../../model/programa-model';
 import {
@@ -22,6 +23,7 @@ import Swal from 'sweetalert2';
 })
 export class EspacioProgramaComponent implements OnInit {
   @ViewChild('tablaEspacios') tablaEspacios!: Table;
+  @ViewChild('uploader') uploader?: FileUpload;
 
   listEspacios: EspacioAcademico[] = [];
   listProgramas: Programa[] = [];
@@ -246,6 +248,7 @@ export class EspacioProgramaComponent implements OnInit {
     this.displayCargarArchivo = true;
     this.archivoSeleccionado = undefined;
     this.previewEspacioProgramas = [];
+    this.uploader?.clear();
   }
 
   onFileSelect(event: any): void {
@@ -310,5 +313,7 @@ export class EspacioProgramaComponent implements OnInit {
     this.archivoSeleccionado = undefined;
     this.previewEspacioProgramas = [];
     this.cargandoArchivo = false;
+    // Limpiar control visual si existe
+    this.uploader?.clear();
   }
 }

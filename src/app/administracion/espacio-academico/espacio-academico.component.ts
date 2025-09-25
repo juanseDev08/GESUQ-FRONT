@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { EspacioAcademicoService } from '../../services/espacio-academico.service';
 import { MessageService } from 'primeng/api';
+import { FileUpload } from 'primeng/fileupload';
 import { EspacioAcademico, IEspacioAcademico } from '../../model/espacio-academico';
 import { Utilities } from '../../util/utilities';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2';
   providers: [MessageService],
 })
 export class EspacioAcademicoComponent implements OnInit {
+  @ViewChild('uploader') uploader?: FileUpload;
   listEspacioAcademico: IEspacioAcademico[] = [];
   espacioAcademico?: IEspacioAcademico;
   newEspacioAcademico: EspacioAcademico = new EspacioAcademico();
@@ -102,6 +104,7 @@ CargarArchivo(){
   this.displayCargarArchivo = true;
   this.archivoSeleccionado = undefined;
   this.previewEspaciosAcademicos = [];
+  this.uploader?.clear();
 }
 
 abrirEditarModal(espacioAcademico : EspacioAcademico){
@@ -187,6 +190,7 @@ cerrarCargarArchivoModal(): void {
   this.displayCargarArchivo = false;
   this.archivoSeleccionado = undefined;
   this.previewEspaciosAcademicos = [];
+  this.uploader?.clear();
 }
 
 eliminar(espacioAcademico: IEspacioAcademico): void {

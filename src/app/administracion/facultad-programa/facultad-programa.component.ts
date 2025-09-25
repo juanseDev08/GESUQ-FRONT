@@ -10,6 +10,7 @@ import { FacultadService } from '../../services/facultad.service';
 import { ProgramaService } from '../../services/programa.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Table } from 'primeng/table';
+import { FileUpload } from 'primeng/fileupload';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,6 +22,7 @@ import Swal from 'sweetalert2';
 export class FacultadProgramaComponent implements OnInit {
 
   @ViewChild('tablaProgramas') tablaProgramas!: Table;
+  @ViewChild('uploader') uploader?: FileUpload;
 
   listFacultades: Facultad[] = [];
   listProgramas: Programa[] = [];
@@ -257,6 +259,7 @@ export class FacultadProgramaComponent implements OnInit {
     this.displayCargarArchivo = true;
     this.archivoSeleccionado = undefined;
     this.previewFacultadProgramas = [];
+    this.uploader?.clear();
   }
 
   limpiarListaTabla(): void {
@@ -275,6 +278,7 @@ export class FacultadProgramaComponent implements OnInit {
     this.displayCargarArchivo = false;
     this.archivoSeleccionado = undefined;
     this.previewFacultadProgramas = [];
+    this.uploader?.clear();
   }
 
   onFileSelect(event: any): void {

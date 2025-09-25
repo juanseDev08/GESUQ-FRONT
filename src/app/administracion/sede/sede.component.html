@@ -165,10 +165,12 @@
                 Seleccione un archivo de texto plano (.txt) con el siguiente formato:<br>
                 <strong>Formato:</strong> NombreSede|Ubicacion<br>
                 <strong>Ejemplo:</strong><br>
+                Cat Buga,Cra 6N # 34-23<br>
+                Cat Pereira,cll 6S #43-24<br>
             </p>
         </div>
         <div class="col-12">
-            <p-fileUpload mode="basic" name="archivoSedes" accept=".txt" [maxFileSize]="1000000" [auto]="false"
+            <p-fileUpload #uploader mode="basic" name="archivoSedes" accept=".txt" [maxFileSize]="1000000" [auto]="false"
                 chooseLabel="Seleccionar Archivo" (onSelect)="onFileSelect($event)" [showUploadButton]="false"
                 [showCancelButton]="false" styleClass="w-full">
             </p-fileUpload>
