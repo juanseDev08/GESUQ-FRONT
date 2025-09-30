@@ -5,9 +5,11 @@ import { Facultad, IFacultad } from '../../model/facultad-model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
 import { StorageService } from '../../services/storage.service';
+import { FileUpload } from 'primeng/fileupload';
 import { UtilConstants } from '../../util/util-constants';
 import { Utilities } from '../../util/utilities';
 import Swal from 'sweetalert2';
+import { LoginComponent } from '../../login/login.component';
 
 @Component({
   selector: 'app-facultad',
@@ -16,6 +18,8 @@ import Swal from 'sweetalert2';
   providers: [MessageService],
 })
 export class FacultadComponent implements OnInit {
+
+  @ViewChild('uploader') uploader?: FileUpload;
 
   listFacultad: IFacultad[]=[];
   facultad?: IFacultad;
@@ -107,6 +111,7 @@ CargarArchivo(){
   this.displayCargarArchivo = true;
   this.archivoSeleccionado = undefined;
   this.previewFacultades = [];
+  this.uploader?.clear();
 }
 
 abrirEditarModal(facultad : Facultad){
@@ -188,6 +193,7 @@ editarFacultad(): void{
     this.displayCargarArchivo = false;
     this.archivoSeleccionado = undefined;
     this.previewFacultades = [];
+  this.uploader?.clear();
   }
 
   eliminar(facultad: IFacultad){

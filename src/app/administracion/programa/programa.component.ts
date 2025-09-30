@@ -6,6 +6,7 @@ import { IPrograma, Programa } from '../../model/programa-model';
 import { Utilities } from '../../util/utilities';
 import { UtilConstants } from '../../util/util-constants';
 import Swal from 'sweetalert2';
+import { PRECONNECT_CHECK_BLOCKLIST } from '@angular/common';
 
 @Component({
   selector: 'app-programa',
@@ -74,6 +75,8 @@ export class ProgramaComponent implements OnInit {
           this.abrirEditarModal(programa);
           break;
         case 'Eliminar':
+          console.log("EEL PROGRAMA ES :", programa);
+          
           this.eliminar(programa);
           break;
   

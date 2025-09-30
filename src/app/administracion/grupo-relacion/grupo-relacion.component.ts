@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { GrupoRelacion, IGrupoRelacion } from '../../model/grupo-relacion';
 import { Facultad } from '../../model/facultad-model';
@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { EspacioPrograma } from '../../model/espacio-programa';
 import { Programa } from '../../model/programa-model';
 import { EspacioProgramaService } from '../../services/espacio-programa.service';
+import { FileUpload } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-grupo-relacion',
@@ -24,6 +25,7 @@ import { EspacioProgramaService } from '../../services/espacio-programa.service'
   providers: [MessageService],
 })
 export class GrupoRelacionComponent implements OnInit {
+  @ViewChild('uploader') uploader?: FileUpload;
   listGruposRelacion: IGrupoRelacion[] = [];
   listSedes: Sede[] = [];
   listEspacios: EspacioAcademico[] = [];
@@ -270,6 +272,7 @@ export class GrupoRelacionComponent implements OnInit {
     this.displayCargarArchivo = true;
     this.archivoSeleccionado = undefined;
     this.previewGrupoRelacion = [];
+    this.uploader?.clear();
   }
 
   //----cerrar modales--//
@@ -284,6 +287,7 @@ export class GrupoRelacionComponent implements OnInit {
     this.displayCargarArchivo = false;
     this.archivoSeleccionado = undefined;
     this.previewGrupoRelacion = [];
+    this.uploader?.clear();
   }
 
   onFileSelected(event: any): void {

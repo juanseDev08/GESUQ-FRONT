@@ -4,6 +4,7 @@ import { Utilities } from '../../util/utilities';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SedeService } from '../../services/sede.service';
 import { MessageService } from 'primeng/api';
+import { FileUpload } from 'primeng/fileupload';
 import { UtilConstants } from '../../util/util-constants';
 import Swal from 'sweetalert2';
 
@@ -14,6 +15,8 @@ import Swal from 'sweetalert2';
   providers: [MessageService],
 })
 export class SedeComponent implements OnInit {
+
+  @ViewChild('uploader') uploader?: FileUpload;
 
   listSedes: Isede[] = [];
   sede?: Isede;
@@ -106,6 +109,7 @@ export class SedeComponent implements OnInit {
     this.displayCargarArchivo = true;
     this.archivoSeleccionado = undefined;
     this.previewSedes = [];
+    this.uploader?.clear();
   }
 
   abrirEditarModal(sede: Sede) {
@@ -213,6 +217,7 @@ export class SedeComponent implements OnInit {
     this.displayCargarArchivo = false;
     this.archivoSeleccionado = undefined;
     this.previewSedes = [];
+    this.uploader?.clear();
   }
 
   onFileSelect(event: any): void {
