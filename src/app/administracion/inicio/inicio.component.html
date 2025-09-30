@@ -1,29 +1,29 @@
 <div class="grid">
-  <div class="col-offset-2 col-8">
+  <div class="col-12 col-offset-0 md:col-offset-2 md:col-8 xl:col-offset-2 xl:col-8">
 
-    <div class=" flex flex-row ">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="col-12 md:col-6 xl:col-3">
         <!-- Sede -->
         <p-dropdown [options]="listaSedes" [(ngModel)]="selectedSede" optionLabel="nombreSede"
           placeholder="Selecciona la sede" (onChange)="filtrarFacultadesPorSede()" showClear="true"
           styleClass="w-full"></p-dropdown>
       </div>
 
-      <div class="col-3">
+      <div class="col-12 md:col-6 xl:col-3">
 
         <!-- Facultad -->
         <p-dropdown *ngIf="facultadesFiltradas.length > 0" [options]="facultadesFiltradas"
           [(ngModel)]="selectedFacultad" optionLabel="nombreFacultad" placeholder="Selecciona la facultad"
           (onChange)="filtrarProgramasPorSedeYFacultad()" showClear="true" styleClass="w-full"></p-dropdown>
       </div>
-      <div class="col-3">
+      <div class="col-12 md:col-6 xl:col-3">
 
         <!-- Programa -->
         <p-dropdown *ngIf="programasFiltrados.length > 0" [options]="programasFiltrados" [(ngModel)]="selectedPrograma"
           optionLabel="nombre" placeholder="Selecciona el programa" (onChange)="filtrarEspacios()" showClear="true"
           styleClass="w-full"></p-dropdown>
       </div>
-      <div class="col-3">
+      <div class="col-12 md:col-6 xl:col-3">
         <!-- Espacio Académico -->
         <p-dropdown *ngIf="espaciosFiltrados.length > 0" [options]="espaciosFiltrados" [(ngModel)]="selectedEspacio"
           optionLabel="nombre" placeholder="Selecciona el aula" (onChange)="buscarGrupoRelacion()" showClear="true"
